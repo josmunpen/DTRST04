@@ -1,0 +1,9 @@
+Query C/1:
+select avg(c.fixUpTasks.size), min(c.fixUpTasks.size), max(c.fixUpTasks.size), stddev(c.fixUpTasks.size)
+ from Customer c;
+
+Query C/2:
+select avg(f.applications.size),max(f.applications.size),min(f.applications.size),stddev(f.applications.size) from FixUpTask f;
+
+Query C/3:
+select avg(f.maximumPrice.amount), min(f.maximumPrice.amount), max(f.maximumPrice.amount), stddev(f.maximumPrice.amount) from FixUpTask f;

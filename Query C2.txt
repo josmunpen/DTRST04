@@ -1,1 +1,0 @@
-select avg(f.applications.size),max(f.applications.size),min(f.applications.size),stddev(f.applications.size) from FixUpTask f;
