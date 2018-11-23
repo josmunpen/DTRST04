@@ -1,4 +1,4 @@
-//12.5
-public ArrayList<Object> applicationsStatistics() {
-	return FixUpTaskRepository.applicationsStatistics;
-}
+	//12.5
+	public ArrayList<Object> applicationsStatistics() {
+		return this.fixUpTaskRepository.applicationsStatistics();
+	}

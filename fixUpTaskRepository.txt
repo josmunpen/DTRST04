@@ -1,3 +1,3 @@
-//12.5
-@Query("select avg(f.applications.size), min(f.applications.size), max(f.applications.size), stddev(f.applications.size)from FixUpTask f")
-ArrayList<Object>	applicationsStatistics;
+	//12.5
+	@Query("select avg(f.applications.size), min(f.applications.size), max(f.applications.size), stddev(f.applications.size) from FixUpTask f")
+	ArrayList<Object> applicationsStatistics();
