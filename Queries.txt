@@ -7,3 +7,21 @@ select avg(f.applications.size),max(f.applications.size),min(f.applications.size
 
 Query C/3:
 select avg(f.maximumPrice.amount), min(f.maximumPrice.amount), max(f.maximumPrice.amount), stddev(f.maximumPrice.amount) from FixUpTask f;
+
+
+
+Query C/10:
+select h from HandyWorker h where h.applications.size
+>= (select(1.1*avg(h.applications.size)) from HandyWorker h)
+group by h.applications.size;
+
+Query B/1:
+select min(f.complaints.size), max(f.complaints.size),
+
+avg(f.complaints.size), 
+stddev(f.complaints.size) from FixUpTask f;
+
+Query B/2:
+select min(r.notes.size), max(r.notes.size),
+avg(r.notes.size),
+stddev(r.notes.size) from Report r;
