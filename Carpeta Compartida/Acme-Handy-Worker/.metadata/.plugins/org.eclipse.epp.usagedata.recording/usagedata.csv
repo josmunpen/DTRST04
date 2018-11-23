@@ -1,0 +1,15 @@
+what,kind,bundleId,bundleVersion,description,time
+deactivated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293203135
+activated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293223896
+executed,command,org.eclipse.ui,3.7.0.v20110928-1505,"org.eclipse.ui.file.import",1542293223929
+deactivated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293240626
+activated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293256716
+deactivated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293259751
+started,bundle,org.eclipse.jdt.launching,3.6.1.v20111006_r372,"org.eclipse.jdt.launching",1542293262144
+activated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293275580
+deactivated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293280383
+activated,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293282169
+closed,workbench,org.eclipse.ui.workbench,3.7.1.v20120104-1859,"",1542293282495
+started,bundle,org.eclipse.compare.core,3.5.200.I20110208-0800,"org.eclipse.compare.core",1542293284096
+started,bundle,org.eclipse.compare,3.5.202.R37x_v20111109-0800,"org.eclipse.compare",1542293284189
+stopped,bundle,org.eclipse.m2e.discovery,1.2.0.20120903-1050,"org.eclipse.m2e.discovery",1542293285059
