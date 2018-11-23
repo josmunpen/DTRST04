@@ -1,0 +1,12 @@
+	//12.5
+	@Query("select count(a1)*1.0 / (select count(a2)*1.0 from Application a2) from Application a1 where a1.status = 'pending'")
+	double pendingApplications();
+
+	@Query("select count(a1)*1.0 / (select count(a2)*1.0 from Application a2) from Application a1 where a1.status = 'accepted'")
+	double acceptedApplications();
+
+	@Query("select count(a1)*1.0 / (select count(a2)*1.0 from Application a2) from Application a1 where a1.status = 'rejected'")
+	double rejectedApplications();
+
+	@Query("select count(a1)/(select count(a2) from Application a2) from Application a1 where a1.status = 'pending' and a1.fixUpTask.endDate > current_timestamp()")
+	double elapsedApplications();
