@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
+import security.LoginService;
 import domain.Application;
 import domain.Customer;
 import domain.HandyWorker;
@@ -44,6 +45,7 @@ public class ApplicationService {
 		final Customer customer;
 		customer = this.customerService.findByPrincipal();
 		Assert.notNull(customer);
+		Assert.notNull(customer.getId());
 
 		res = this.applicationRepository.findByCustomerId(customer.getId());
 		return res;
@@ -60,12 +62,12 @@ public class ApplicationService {
 		final Customer customer;
 		customer = this.customerService.findByPrincipal();
 		Assert.notNull(customer);
-		//or a handy worker
-		//TODO: handyworker solo pueden crear
-		final HandyWorker handyWorker;
-		handyWorker = this.handyWorkerService.findByPrincipal();
-		Assert.notNull(handyWorker);
+		Assert.notNull(customer.getId());
+		//TODO:IDcustomerLogeado==idDelCustomerReal
+		int id=LoginService.getPrincipal().getId();
+		int fixUpTaskId=application.getFixUpTask().getId();
 
+		String status=application.getStatus();
 		res = this.applicationRepository.save(application);
 		return res;
 	}

@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.FixUpTaskRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.HandyWorker;
@@ -55,11 +58,13 @@ public class FixUpTaskService {
 		Assert.notNull(fixUpTask.getMoment());
 
 		res = this.fixUpTaskRepository.save(fixUpTask);
-
+		
+		
 		return res;
 	}
 
 	public void delete(final FixUpTask fixUpTask) {
+		//TODO:Comprobacion de los 3 pasos
 		Assert.notNull(fixUpTask);
 
 		Assert.isTrue(fixUpTask.getId() != 0);

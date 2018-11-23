@@ -1050,7 +1050,7 @@
 		</property>
 		<property name="complaints" >
 			<list>
-				<ref bean="complaint7"></ref>
+			
 			</list>
 		</property>
 		<property name="applications" >

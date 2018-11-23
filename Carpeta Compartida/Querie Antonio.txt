@@ -1,8 +1,0 @@
-select distinct from Customer c join c.fixUpTasks f where f.complaints.size>0 order by c.fixUpTasks.size;
-
-select c,f.complaints.size from Customer c join c.fixUpTasks f order by f.complaints.size desc;
-
-select c from Customer c join c.fixUpTasks f order by f.complaints.size desc;
-
-V2.0:
-select distinct c from Customer c join c.fixUpTasks f order by f.complaints.size desc;
