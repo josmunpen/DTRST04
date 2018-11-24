@@ -21,6 +21,7 @@ public class Endorsement extends DomainEntity {
 	private Endorser	endorser;
 
 
+	@NotNull
 	public String getComment() {
 		return this.comment;
 	}

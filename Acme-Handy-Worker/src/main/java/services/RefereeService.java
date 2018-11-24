@@ -57,4 +57,27 @@ public class RefereeService {
 
 		return res;
 	}
+
+	//Returns logged customer
+	public Referee findByPrincipal() {
+		Referee res;
+		UserAccount userAccount;
+
+		userAccount = LoginService.getPrincipal();
+		Assert.notNull(userAccount);
+		res = this.findByUserAccount(userAccount);
+		Assert.notNull(res);
+
+		return res;
+	}
+
+	//Returns logged customer from his or her userAccount
+	public Referee findByUserAccount(final UserAccount userAccount) {
+		Referee res;
+		Assert.notNull(userAccount);
+
+		res = this.refereeRepository.findByUserAccountId(userAccount.getId());
+
+		return res;
+	}
 }

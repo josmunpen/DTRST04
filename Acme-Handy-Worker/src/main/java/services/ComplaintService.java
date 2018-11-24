@@ -16,6 +16,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Complaint;
 import domain.FixUpTask;
+import domain.Referee;
 
 @Service
 @Transactional
@@ -31,6 +32,9 @@ public class ComplaintService {
 
 	@Autowired
 	public FixUpTaskService		fixUpTaskService;
+
+	@Autowired
+	public RefereeService		refereeService;
 
 
 	//Constructor
@@ -77,5 +81,41 @@ public class ComplaintService {
 
 		return res;
 
+	}
+	//36.1
+	public Collection<Complaint> findNoReferee() {
+		//Logged user must be a referee
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.REFEREE);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		final Referee referee;
+		referee = this.refereeService.findByPrincipal();
+		Assert.notNull(referee);
+
+		final List<Complaint> res = new ArrayList<Complaint>();
+
+		return res;
+
+	}
+
+	//36.2
+	public Collection<Complaint> findByReferee() {
+		//Logged user must be a referee
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.REFEREE);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		final Collection<Complaint> res;
+		final Referee referee;
+		referee = this.refereeService.findByPrincipal();
+		Assert.notNull(referee);
+		Assert.isTrue(referee.getId() != 0);
+
+		res = this.complaintRepository.findByRefereeId(referee.getId());
+
+		return res;
 	}
 }
