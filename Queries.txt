@@ -1,0 +1,48 @@
+Query C/1:
+select avg(c.fixUpTasks.size), min(c.fixUpTasks.size), max(c.fixUpTasks.size), stddev(c.fixUpTasks.size)
+ from Customer c;
+
+Query C/2:
+select avg(f.applications.size),max(f.applications.size),min(f.applications.size),stddev(f.applications.size) from FixUpTask f;
+
+Query C/3:
+select avg(f.maximumPrice.amount), min(f.maximumPrice.amount), max(f.maximumPrice.amount), stddev(f.maximumPrice.amount) from FixUpTask f;
+
+C/4:
+select avg(a.offeredPrice.amount), min(a.offeredPrice.amount), max(a.offeredPrice.amount),stddev(f.maximumPrice.amount) from Application a; 
+
+C/5:
+select count(a1)*1.0 / (select count(a2)*1.0 from Application a2) from Application a1 where a1.status = 
+'pending';
+
+C/6:
+select count(a1)*1.0 / (select count(a2)*1.0 from Application a2) from Application a1 where a1.status = 
+'accepted';
+
+C/7:
+select count(a1)/(select count(a2) from Application a2) from Application a1 where a1.status = 'rejected';
+
+C/8:
+select count(a1)/(select count(a2) from Application a2) from Application a1 where a1.status = 'pending' and a1.fixUpTask.endDate > current_timestamp();
+
+C/9:
+select c from Customer c join c.fixUpTasks f where c.fixUpTasks.size > (select 1.1 * avg(c2.fixUpTasks.size) from Customer c2) order by (f.applications.size);
+
+Query C/10:
+select h from HandyWorker h where h.applications.size
+>= (select(1.1*avg(h2.applications.size)) from HandyWorker h2)
+group by h.applications.size;
+
+Query B/1:
+select min(f.complaints.size), max(f.complaints.size),
+avg(f.complaints.size), 
+stddev(f.complaints.size) from FixUpTask f;
+
+Query B/2:
+select min(r.notes.size), max(r.notes.size),
+avg(r.notes.size),
+stddev(r.notes.size) from Report r;
+
+B3:select count(f)/(select count(f1) from FixUpTask f1) from FixUpTask f where f.complaints.size>0;
+B4:select distinct c from Customer c join c.fixUpTasks f order by f.complaints.size desc;
+B5:select distinct hw from HandyWorker hw join hw.applications a where a.fixUpTask.complaints.size>0 order by count(hw.applications.size) desc;
