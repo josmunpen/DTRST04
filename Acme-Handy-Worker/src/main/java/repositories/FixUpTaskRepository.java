@@ -1,0 +1,40 @@
+
+package repositories;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import domain.FixUpTask;
+
+@Repository
+public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
+
+	//Query 10.1 (METIENDO ID DE CUSTOMER)
+	@Query("select distinct c.fixuptasks from Customer c where c.id=?1")
+	Collection<FixUpTask> findByCustomerId(int customerId);
+
+	/*
+	 * //Query 10.1 (METIENDO ID DE USERACCOUNT)
+	 * 
+	 * @Query("select distinct c.fixuptasks from Customer c where c.id=?1")
+	 * Collection<FixUpTask> findByCustomerId(int customerId);
+	 */
+
+	//Query 11.2
+	/*
+	 * static final String qry = "select f from FixUpTask f";
+	 * if(keyword)
+	 */
+
+	//12.5
+	@Query("select avg(f.applications.size), min(f.applications.size), max(f.applications.size), stddev(f.applications.size) from FixUpTask f")
+	ArrayList<Object> applicationsStatistics();
+
+	@Query("select avg(f.maximumPrice.amount), min(f.maximumPrice.amount), max(f.maximumPrice.amount), stddev(f.maximumPrice.amount) from FixUpTask f")
+	ArrayList<Object> maximunPriceStatistics();
+
+}
