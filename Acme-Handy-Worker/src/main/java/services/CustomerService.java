@@ -4,7 +4,6 @@ package services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,15 +35,15 @@ public class CustomerService {
 
 	//Simple CRUD
 
-	//9.1
+	//8.1
 	public Customer create() {
 		Customer result;
 		result = new Customer();
-		Box trash=new Box();
-		Box out=new Box();
-		Box spam=new Box();
-		Box in=new Box();
-		List<Box> predefined=new ArrayList<Box>();
+		final Box trash = new Box();
+		final Box out = new Box();
+		final Box spam = new Box();
+		final Box in = new Box();
+		final List<Box> predefined = new ArrayList<Box>();
 		predefined.add(in);
 		predefined.add(out);
 		predefined.add(spam);
@@ -52,8 +51,8 @@ public class CustomerService {
 		result.setSocialProfiles(new ArrayList<SocialProfile>());
 		result.setBoxes(new ArrayList<Box>(predefined));
 		result.setScore(0);
-		UserAccount user=new UserAccount();
-		Authority a=new Authority();
+		final UserAccount user = new UserAccount();
+		final Authority a = new Authority();
 		a.setAuthority(Authority.HANDYWORKER);
 		user.addAuthority(a);
 		result.setUserAccount(user);
@@ -62,14 +61,33 @@ public class CustomerService {
 
 	//9.2
 	public Customer save(final Customer customer) {
-		Assert.notNull(customer);
-		Assert.isTrue(customer.getBan()==false);
-		Authority a=new Authority();
-		UserAccount user=LoginService.getPrincipal();
+
+		//Logged user must be a customer
+
+		/*
+		 * final Customer customer2;
+		 * customer2 = this.customerService.findByPrincipal();
+		 * Assert.notNull(customer2);
+		 * Assert.notNull(customer2.getId());
+		 * Assert.isTrue(customer.getBan() == false);
+		 */
+
+		//Logged user must be a customer
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
+
+		//Restrictions
+		Assert.notNull(customer.getName());
+		Assert.notNull(customer.getEmail());
+		Assert.notNull(customer.getPhoneNumber());
+		Assert.notNull(customer.getAddress());
+		Assert.isTrue(customer.getBan() == false);
+		Assert.notNull(customer.getSurname());
+		Assert.notNull(customer.getUserAccount());
+
 		Customer res;
-		//Restricciones
 		res = this.customerRepository.save(customer);
 		return res;
 	}

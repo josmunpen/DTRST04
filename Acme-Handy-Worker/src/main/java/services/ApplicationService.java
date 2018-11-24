@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
+import security.Authority;
 import security.LoginService;
+import security.UserAccount;
 import domain.Application;
 import domain.Customer;
 import domain.HandyWorker;
@@ -35,17 +37,33 @@ public class ApplicationService {
 	}
 
 	//Simple CRUD
+	public Application create() {
 
+		//Logged user must be a handyWorker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		return new Application();
+
+		//TODO: FixUpTask de la application?
+
+	}
 	//Complex methods
 	//10.2
 	public Collection<Application> findByCustomer() {
 		Collection<Application> res;
 
-		//Logged must be a customer
+		//Logged user must be a customer
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
 		final Customer customer;
 		customer = this.customerService.findByPrincipal();
 		Assert.notNull(customer);
-		Assert.notNull(customer.getId());
 
 		res = this.applicationRepository.findByCustomerId(customer.getId());
 		return res;
@@ -55,19 +73,26 @@ public class ApplicationService {
 		Assert.notNull(application);
 
 		Application res;
-		//TODO: Atributos obligatorios
 
-		//Logged must be a customer
-		//TODO: Customer solo pueden actualizar
+		//Logged user must be a customer
 		final Customer customer;
 		customer = this.customerService.findByPrincipal();
 		Assert.notNull(customer);
 		Assert.notNull(customer.getId());
-		//TODO:IDcustomerLogeado==idDelCustomerReal
-		int id=LoginService.getPrincipal().getId();
-		int fixUpTaskId=application.getFixUpTask().getId();
 
-		String status=application.getStatus();
+		//TODO:IDcustomerLogeado==idDelCustomerReal
+		final int id = LoginService.getPrincipal().getId();
+		final int fixUpTaskId = application.getFixUpTask().getId();
+
+		//TODO: Atributos obligatorios
+		//TODO: DATE Assert.notNull();
+		Assert.notNull(application.getStatus());
+		Assert.notNull(application.getComment());
+		//TODO: Assert.notnull(application.getRecejtedCause()); RejectedCausee no debería tener @NotBlank?
+
+		if (application.getStatus().equals("accepted"))
+			Assert.notNull(application.getCreditCard());
+
 		res = this.applicationRepository.save(application);
 		return res;
 	}
@@ -76,7 +101,7 @@ public class ApplicationService {
 	public Collection<Application> findByHandyWorker() {
 		Collection<Application> res;
 
-		//Logged must be a customer
+		//Logged must be a handyWorker
 		final HandyWorker handyWorker;
 		handyWorker = this.handyWorkerService.findByPrincipal();
 		Assert.notNull(handyWorker);
