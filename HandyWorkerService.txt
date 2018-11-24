@@ -1,0 +1,4 @@
+	//12.5
+	public Collection<HandyWorker> handyWorkersWithMoreApplications() {
+		return this.handyWorkerRepository.handyWorkersWithMoreApplications();
+	}

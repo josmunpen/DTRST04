@@ -2,3 +2,7 @@
 	public ArrayList<Object> applicationsStatistics() {
 		return this.fixUpTaskRepository.applicationsStatistics();
 	}
+
+	public ArrayList<Object> maximunPriceStatistics() {
+		return this.fixUpTaskRepository.maximunPriceStatistics();
+	}

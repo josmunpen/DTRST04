@@ -1,0 +1,3 @@
+	//12.5
+	@Query("select h from HandyWorker h where h.applications.size >= (select(1.1*avg(h2.applications.size)) from HandyWorker h2) group by h.applications.size")
+	Collection<HandyWorker> handyWorkersWithMoreApplications();
