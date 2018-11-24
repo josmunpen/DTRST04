@@ -39,6 +39,8 @@ public class AdministratorService {
 		user.setAuthorities(a);
 		admin.setUserAccount(user);
 
+		this.administratorRepository.save(admin);
+
 		return admin;
 	}
 	//Complex methods

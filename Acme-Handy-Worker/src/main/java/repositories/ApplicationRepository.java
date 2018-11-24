@@ -37,5 +37,4 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
 
 	@Query("select avg(a.offeredPrice.amount), min(a.offeredPrice.amount), max(a.offeredPrice.amount),stddev(f.maximumPrice.amount) from Application a")
 	ArrayList<Object> offeredPriceStatistics();
-
 }

@@ -22,6 +22,21 @@ public class WarrantyService {
 
 
 	//12.2
+	public Warranty create() {
+		final Administrator admin;
+		admin = this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+
+		Warranty result;
+
+		result = new Warranty();
+
+		this.warrantyRepository.save(result);
+
+		return result;
+	}
+
+	//12.2
 	public void delete(final Warranty warranty) {
 		final Administrator admin;
 		admin = this.administratorService.findByPrincipal();
