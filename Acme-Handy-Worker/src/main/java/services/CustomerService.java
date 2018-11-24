@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,5 +116,15 @@ public class CustomerService {
 		res = this.customerRepository.findByUserAccountId(userAccount.getId());
 
 		return res;
+	}
+
+	//12.5
+	//TODO:logged
+	public ArrayList<Object> fixUpTasksStatistics() {
+		return this.customerRepository.fixUpTaskStatistics();
+	}
+
+	public Collection<Customer> customersWithMoreFixUpTasks() {
+		return this.customerRepository.customersWithMoreFixUpTasks();
 	}
 }

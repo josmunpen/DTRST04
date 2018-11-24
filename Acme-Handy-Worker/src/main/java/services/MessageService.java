@@ -10,6 +10,8 @@ import repositories.MessageRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Actor;
+import domain.Administrator;
 import domain.Message;
 
 @Service
@@ -28,8 +30,7 @@ public class MessageService {
 		super();
 	}
 
-	//Simple CRUD 
-
+	//Simple CRUD
 	public Message create() {
 		Message res;
 		res = new Message();
@@ -89,6 +90,21 @@ public class MessageService {
 		Assert.notNull(message.getRecipient());
 
 		this.messageRepository.delete(message);
+
+	}
+
+	//12.4
+	//TODO: REVISAR ENTERA
+	public Message createForActor(final Actor actor) {
+		final Administrator admin;
+		admin = this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+
+		final Message m = new Message();
+		m.setRecipient(actor);
+		m.setSender(admin);
+
+		return m;
 
 	}
 

@@ -1,6 +1,7 @@
 
 package repositories;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,4 +30,10 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 	 * if(keyword)
 	 */
 
+	//12.5
+	@Query("select avg(f.applications.size), min(f.applications.size), max(f.applications.size), stddev(f.applications.size) from FixUpTask f")
+	ArrayList<Object> applicationsStatistics();
+
+	@Query("select avg(f.maximumPrice.amount), min(f.maximumPrice.amount), max(f.maximumPrice.amount), stddev(f.maximumPrice.amount) from FixUpTask f")
+	ArrayList<Object> maximunPriceStatistics();
 }

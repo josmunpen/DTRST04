@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,4 +110,27 @@ public class ApplicationService {
 		res = this.applicationRepository.findByHandyWorkerId(handyWorker.getId());
 		return res;
 	}
+
+	//12.5
+	//TODO: Comprobar usuario logeado
+	public double pendingApplications() {
+		return this.applicationRepository.pendingApplications();
+	}
+
+	public double acceptedApplications() {
+		return this.applicationRepository.acceptedApplications();
+	}
+
+	public double rejectedApplications() {
+		return this.applicationRepository.rejectedApplications();
+	}
+
+	public double elapsedApplications() {
+		return this.applicationRepository.elapsedApplications();
+	}
+
+	public ArrayList<Object> offeredPriceStatisctics() {
+		return this.applicationRepository.offeredPriceStatistics();
+	}
+
 }

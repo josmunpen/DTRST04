@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,5 +116,15 @@ public class FixUpTaskService {
 		Collection<FixUpTask> res;
 		res = this.fixUpTaskRepository.findAll();
 		return res;
+	}
+
+	//12.5
+	//TODO: Logged user
+	public ArrayList<Object> applicationsStatistics() {
+		return this.fixUpTaskRepository.applicationsStatistics();
+	}
+
+	public ArrayList<Object> maximunPriceStatistics() {
+		return this.fixUpTaskRepository.maximunPriceStatistics();
 	}
 }

@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -104,5 +105,11 @@ public class HandyWorkerService {
 		res = this.handyWorkerRepository.findByUserAccountId(userAccount.getId());
 
 		return res;
+	}
+
+	//12.5
+	//TODO: login
+	public Collection<HandyWorker> handyWorkersWithMoreApplications() {
+		return this.handyWorkerRepository.handyWorkersWithMoreApplications();
 	}
 }
