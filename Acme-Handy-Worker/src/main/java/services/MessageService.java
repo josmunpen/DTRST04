@@ -1,7 +1,10 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,8 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
 import domain.Box;
+import domain.Customer;
+import domain.Customisation;
 import domain.Message;
 
 @Service
@@ -27,6 +32,9 @@ public class MessageService {
 	//Services
 	@Autowired
 	public ActorService			actorService;
+	
+	@Autowired
+	public CustomisationService customisationService;
 
 
 	//Constructor
@@ -45,12 +53,7 @@ public class MessageService {
 		Assert.notNull(logActor.getId());
 		res.setSender(logActor);
 
-		for (final Box b : logActor.getBoxes())
-			if (b.getName() == "out") {
-				final Collection<Message> col = b.getMessages();
-				col.add(res);
-				b.setMessages(col);
-			}
+		
 		//TODO:Recipient
 		return res;
 	}
@@ -63,16 +66,34 @@ public class MessageService {
 		//Logged user must be a customer/handyworker
 		final Authority a = new Authority();
 		final Authority b = new Authority();
+		final Authority c = new Authority();
+		final Authority d = new Authority();
+		final Authority e = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
 		b.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b));
+		c.setAuthority(Authority.REFEREE);
+		d.setAuthority(Authority.ADMIN);
+		e.setAuthority(Authority.SPONSOR);
+		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b)
+				|| user.getAuthorities().contains(c)|| user.getAuthorities().contains(d)|| 
+				user.getAuthorities().contains(e));
 
 		//Restrictions
 		Assert.notNull(message.getMoment());
-		Assert.notNull(message.getPriority());
+		Assert.isTrue(message.getPriority()=="HIGH"||message.getPriority()=="LOW"||message.getPriority()=="NEUTRAL");
 		Assert.notNull(message.getBody());
 		Assert.notNull(message.getSubject());
+		Collection<Customisation> customisation=this.customisationService.findAll();
+		List<Customisation> customisation1=new ArrayList<Customisation>(customisation);
+		List<String> l1=new ArrayList<String>(customisation1.get(0).getSpamWords());
+		String asunto=message.getSubject();
+		for(String spamWord:l1) {
+			if(asunto.contains(spamWord)) {
+				message.setFlagSpam(true);
+				break;
+			}
+		}
 		Assert.isTrue(message.getFlagSpam() == false);
 		Assert.notNull(message.getSender());
 		Assert.notNull(message.getRecipient());

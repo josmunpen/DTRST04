@@ -40,15 +40,18 @@ public class BoxService {
 
 		//Logged user must be a customer/handyworker
 		final Authority a = new Authority();
+		final Authority b = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(user.getAuthorities().contains(a));
-		//TODO: or a handyworker
+		b.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a)||user.getAuthorities().contains(b));
 
 		//Restrictions
 		Assert.notNull(box.getName());
-		Assert.isTrue(box.getPredefined() == false);
-
+		Assert.isNull(box.getPredefined());
+		if(box.getPredefined()==true) {
+			Assert.isTrue(box.getName()=="in"||box.getName()=="out"||box.getName()=="trash"||box.getName()=="spam");
+		}
 		final Box res;
 		res = this.boxRepository.save(box);
 		return res;
