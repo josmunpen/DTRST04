@@ -61,7 +61,7 @@ public class Application extends DomainEntity {
 	public void setComment(final String comment) {
 		this.comment = comment;
 	}
-	@NotBlank
+
 	public String getRejectedCause() {
 		return this.rejectedCause;
 	}

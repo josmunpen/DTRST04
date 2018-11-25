@@ -64,10 +64,11 @@ public class BoxService {
 
 		//Logged user must be a customer/handyworker
 		final Authority a = new Authority();
+		final Authority b = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(user.getAuthorities().contains(a));
-		//TODO: or a handyworker
+		b.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a)||user.getAuthorities().contains(b));
 
 		//Restrictions
 		Assert.notNull(box.getName());

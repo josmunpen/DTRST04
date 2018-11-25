@@ -4,7 +4,6 @@ package services;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,13 +103,31 @@ public class MessageService {
 		Assert.notNull(logActor);
 		Assert.notNull(logActor.getId());
 		Assert.isTrue(logActor.equals(message.getSender()));
-
+		
+		//Message saves in sender's out box
 		for (final Box box : logActor.getBoxes())
 			if (box.getName() == "out") {
 				final Collection<Message> col = box.getMessages();
-				col.add(res);
+				col.add(message);
 				box.setMessages(col);
 			}
+		
+		//Message saves in recipient's corresponding box
+		Actor recipient=message.getRecipient();
+		for (final Box box : recipient.getBoxes()) {
+			if(box.getName()=="in" && !message.getFlagSpam()) {
+				
+					final Collection<Message> col=box.getMessages();
+					col.add(message);
+					box.setMessages(col);
+					
+				}else if(box.getName()=="spam" && message.getFlagSpam()) {
+						final Collection<Message> col=box.getMessages();
+						col.add(message);
+						box.setMessages(col);
+
+			}
+		}
 
 		final Message res;
 
@@ -123,12 +140,22 @@ public class MessageService {
 		Assert.isTrue(message.getId() != 0);
 		Assert.isTrue(this.messageRepository.exists(message.getId()));
 
-		//Logged user must be a customer/handyworker
+		//Logged user must be an actor
 		final Authority a = new Authority();
+		final Authority b = new Authority();
+		final Authority c = new Authority();
+		final Authority d = new Authority();
+		final Authority e = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(user.getAuthorities().contains(a));
-		//TODO: or a handyworker
+		b.setAuthority(Authority.HANDYWORKER);
+		c.setAuthority(Authority.REFEREE);
+		d.setAuthority(Authority.SPONSOR);
+		e.setAuthority(Authority.ADMIN);
+		
+		Assert.isTrue(user.getAuthorities().contains(a)||user.getAuthorities().contains(b)
+				||user.getAuthorities().contains(c)||user.getAuthorities().contains(d)||
+				user.getAuthorities().contains(e));
 
 		//Restrictions
 		Assert.notNull(message.getMoment());

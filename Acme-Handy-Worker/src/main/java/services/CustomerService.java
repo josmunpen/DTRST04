@@ -16,6 +16,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Box;
 import domain.Customer;
+import domain.FixUpTask;
 import domain.SocialProfile;
 
 @Service
@@ -126,6 +127,19 @@ public class CustomerService {
 		return res;
 	}
 
+	//11.1
+	//TODO:Terminar la Querie de findByFixUpTask
+	public Customer findByFixUpTask(final FixUpTask fixUpTask) {
+		//Logged user must be a handyWorker
+				final Authority a = new Authority();
+				final UserAccount user = LoginService.getPrincipal();
+				a.setAuthority(Authority.HANDYWORKER);
+				Assert.isTrue(user.getAuthorities().contains(a));
+				
+				Customer res;
+				res=this.customerRepository.findByFixUpTask(fixUpTask.getId());
+				return res;
+	}
 	//Returns logged customer from his or her userAccount
 	public Customer findByUserAccount(final UserAccount userAccount) {
 		Customer res;

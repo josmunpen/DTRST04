@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import repositories.FixUpTaskRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+
 import domain.Category;
 import domain.Customer;
 import domain.FixUpTask;
@@ -43,6 +45,13 @@ public class FixUpTaskService {
 	//10.1
 
 	public FixUpTask create() {
+		//Logged user must be a customer
+		Assert.isTrue(!LoginService.getPrincipal().isAccountNonLocked());
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+	
 		final FixUpTask res = new FixUpTask();
 		final Category cat = new Category();
 		cat.setName("CATEGORY");
@@ -52,6 +61,7 @@ public class FixUpTaskService {
 
 	public FixUpTask save(final FixUpTask fixUpTask) {
 		Assert.notNull(fixUpTask);
+		Assert.notNull(fixUpTask.getId());
 
 		//Logged user must be a customer
 		final Authority a = new Authority();
@@ -59,12 +69,21 @@ public class FixUpTaskService {
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
+		//fixUpTask's owner ID must be the same as LoggedCustomerId
+		final Customer logCustomer;
+		logCustomer = this.customerService.findByPrincipal();
+		Assert.notNull(logCustomer);
+		Assert.notNull(logCustomer.getId());
+		Assert.isTrue(logCustomer.getFixUpTasks().contains(fixUpTask));
+		
 		//Restrictions
 		Assert.notNull(fixUpTask.getMoment());
 		Assert.notNull(fixUpTask.getTicker());
 		Assert.notNull(fixUpTask.getAddress());
 		Assert.notNull(fixUpTask.getDescription());
-		//TODO: Atributos tipo DATE
+		Assert.notNull(fixUpTask.getStartDate());
+		Assert.notNull(fixUpTask.getEndDate());
+		Assert.isTrue(fixUpTask.getStartDate().before(fixUpTask.getEndDate()));
 		Assert.notNull(fixUpTask.getCategory());
 
 		final FixUpTask res;
@@ -73,9 +92,8 @@ public class FixUpTaskService {
 	}
 
 	public void delete(final FixUpTask fixUpTask) {
-		//TODO:Comprobacion de los 3 pasos
 		Assert.notNull(fixUpTask);
-		Assert.isTrue(fixUpTask.getId() != 0);
+		Assert.notNull(fixUpTask.getId());
 		Assert.isTrue(this.fixUpTaskRepository.exists(fixUpTask.getId()));
 
 		//Logged user must be a customer
@@ -83,6 +101,13 @@ public class FixUpTaskService {
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
+		
+		//fixUpTask's owner ID must be the same as LoggedCustomerId
+				final Customer logCustomer;
+				logCustomer = this.customerService.findByPrincipal();
+				Assert.notNull(logCustomer);
+				Assert.notNull(logCustomer.getId());
+				Assert.isTrue(logCustomer.getFixUpTasks().contains(fixUpTask));
 
 		this.fixUpTaskRepository.delete(fixUpTask);
 	}

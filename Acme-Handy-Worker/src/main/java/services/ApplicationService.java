@@ -3,6 +3,8 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Application;
 import domain.Customer;
+import domain.FixUpTask;
 import domain.HandyWorker;
 
 @Service
@@ -65,7 +68,8 @@ public class ApplicationService {
 		final Customer customer;
 		customer = this.customerService.findByPrincipal();
 		Assert.notNull(customer);
-
+		Assert.notNull(customer.getId());
+		
 		res = this.applicationRepository.findByCustomerId(customer.getId());
 		return res;
 	}
@@ -74,26 +78,43 @@ public class ApplicationService {
 		Assert.notNull(application);
 
 		Application res;
-
+		
 		//Logged user must be a customer
-		final Customer customer;
-		customer = this.customerService.findByPrincipal();
-		Assert.notNull(customer);
-		Assert.notNull(customer.getId());
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(user.getAuthorities().contains(a));
 
-		//TODO:IDcustomerLogeado==idDelCustomerReal
-		final int id = LoginService.getPrincipal().getId();
-		final int fixUpTaskId = application.getFixUpTask().getId();
+		//Logged customer is application's owner
+		final Customer logCustomer;
+		logCustomer = this.customerService.findByPrincipal();
+		Assert.notNull(logCustomer);
+		Assert.notNull(logCustomer.getId());
+		List<Application> l1=new ArrayList<Application>();
+		Collection<FixUpTask> col1=logCustomer.getFixUpTasks();
+		for(FixUpTask f:col1) {
+			l1.addAll(f.getApplications());
+		}
+		Assert.isTrue(l1.contains(application));
 
-		//TODO: Atributos obligatorios
-		//TODO: DATE Assert.notNull();
+		//Atributes that cant be changed
+		Application oldApplication= this.applicationRepository.findById(application.getId());
+		Assert.isTrue(application.getMoment()==oldApplication.getMoment());
+		Assert.isTrue(application.getOfferedPrice()==oldApplication.getOfferedPrice());
 		Assert.notNull(application.getStatus());
+		Assert.isTrue(application.getStatus()=="pending"||application.getStatus()=="accepted"||
+				application.getStatus()=="rejected");
 		Assert.notNull(application.getComment());
-		//TODO: Assert.notnull(application.getRecejtedCause()); RejectedCausee no debería tener @NotBlank?
-
-		if (application.getStatus().equals("accepted"))
+		//L
+		if (application.getStatus().equals("accepted")) {
+			
 			Assert.notNull(application.getCreditCard());
-
+			
+		}else if(application.getStatus().equals("rejected")) {
+			
+			Assert.notNull(application.getRejectedCause());
+		}
+		
 		res = this.applicationRepository.save(application);
 		return res;
 	}
