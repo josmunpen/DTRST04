@@ -36,6 +36,20 @@ public class HandyWorkerService {
 
 	//8.1
 	public HandyWorker create() {
+		//User cant be logged to register
+		final Authority a = new Authority();
+		final Authority b = new Authority();
+		final Authority c = new Authority();
+		final Authority d = new Authority();
+		final Authority e = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		b.setAuthority(Authority.HANDYWORKER);
+		c.setAuthority(Authority.CUSTOMER);
+		d.setAuthority(Authority.REFEREE);
+		e.setAuthority(Authority.SPONSOR);
+		Assert.isTrue(!(user.getAuthorities().contains(a) || user.getAuthorities().contains(b) || user.getAuthorities().contains(c) || user.getAuthorities().contains(d) || user.getAuthorities().contains(e)));
+
 		HandyWorker result;
 		result = new HandyWorker();
 		final Box trash = new Box();
@@ -50,10 +64,10 @@ public class HandyWorkerService {
 		result.setSocialProfiles(new ArrayList<SocialProfile>());
 		result.setBoxes(new ArrayList<Box>(predefined));
 		result.setScore(0);
-		final UserAccount user = new UserAccount();
-		final Authority a = new Authority();
-		a.setAuthority(Authority.HANDYWORKER);
-		user.addAuthority(a);
+		final UserAccount newUser = new UserAccount();
+		final Authority f = new Authority();
+		f.setAuthority(Authority.HANDYWORKER);
+		newUser.addAuthority(f);
 		result.setUserAccount(user);
 		return result;
 	}

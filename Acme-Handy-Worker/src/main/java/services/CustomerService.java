@@ -38,6 +38,20 @@ public class CustomerService {
 
 	//8.1
 	public Customer create() {
+		//User cant be logged to register
+		final Authority a = new Authority();
+		final Authority b = new Authority();
+		final Authority c = new Authority();
+		final Authority d = new Authority();
+		final Authority e = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		b.setAuthority(Authority.HANDYWORKER);
+		c.setAuthority(Authority.CUSTOMER);
+		d.setAuthority(Authority.REFEREE);
+		e.setAuthority(Authority.SPONSOR);
+		Assert.isTrue(!(user.getAuthorities().contains(a) || user.getAuthorities().contains(b) || user.getAuthorities().contains(c) || user.getAuthorities().contains(d) || user.getAuthorities().contains(e)));
+
 		Customer result;
 		result = new Customer();
 		final Box trash = new Box();
@@ -52,32 +66,33 @@ public class CustomerService {
 		result.setSocialProfiles(new ArrayList<SocialProfile>());
 		result.setBoxes(new ArrayList<Box>(predefined));
 		result.setScore(0);
-		final UserAccount user = new UserAccount();
-		final Authority a = new Authority();
-		a.setAuthority(Authority.HANDYWORKER);
-		user.addAuthority(a);
+		final UserAccount newUser = new UserAccount();
+		final Authority f = new Authority();
+		f.setAuthority(Authority.CUSTOMER);
+		newUser.addAuthority(f);
 		result.setUserAccount(user);
 		return result;
 	}
 
 	//9.2
 	public Customer save(final Customer customer) {
-
-		//Logged user must be a customer
-
-		/*
-		 * final Customer customer2;
-		 * customer2 = this.customerService.findByPrincipal();
-		 * Assert.notNull(customer2);
-		 * Assert.notNull(customer2.getId());
-		 * Assert.isTrue(customer.getBan() == false);
-		 */
+		Assert.notNull(customer);
+		Assert.notNull(customer.getId());
+		Assert.isTrue(!customer.getBan());
 
 		//Logged user must be a customer
 		final Authority a = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
+
+		//Modified customer must be logged customer
+
+		final Customer logCustomer;
+		customer2 = this.customerService.findByPrincipal();
+		Assert.notNull(customer2);
+		Assert.notNull(customer2.getId());
+		Assert.isTrue(customer.getBan() == false);
 
 		//Restrictions
 		Assert.notNull(customer.getName());
