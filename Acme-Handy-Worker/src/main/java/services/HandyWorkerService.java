@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -22,6 +23,7 @@ import domain.SocialProfile;
 public class HandyWorkerService {
 
 	//Repository
+	@Autowired
 	public HandyWorkerRepository	handyWorkerRepository;
 
 
@@ -61,6 +63,10 @@ public class HandyWorkerService {
 		predefined.add(out);
 		predefined.add(spam);
 		predefined.add(trash);
+		out.setPredefined(true);
+		in.setPredefined(true);
+		spam.setPredefined(true);
+		trash.setPredefined(true);
 		result.setSocialProfiles(new ArrayList<SocialProfile>());
 		result.setBoxes(new ArrayList<Box>(predefined));
 		result.setScore(0);
@@ -75,21 +81,31 @@ public class HandyWorkerService {
 	//9.2
 	public HandyWorker save(final HandyWorker handyWorker) {
 		Assert.notNull(handyWorker);
+		Assert.notNull(handyWorker.getId());
+		Assert.isTrue(!handyWorker.getBan());
 
-		//Logged user must be a handyWorker
+		//Logged user must be a customer
 		final Authority a = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(user.getAuthorities().contains(a));
+
+		//Modified customer must be logged customer
+		final HandyWorker logHandyWorker;
+		logHandyWorker = this.findByPrincipal();
+		Assert.notNull(logHandyWorker);
+		Assert.notNull(logHandyWorker.getId());
 
 		//Restrictions
 		Assert.notNull(handyWorker.getName());
 		Assert.notNull(handyWorker.getEmail());
 		Assert.notNull(handyWorker.getPhoneNumber());
 		Assert.notNull(handyWorker.getAddress());
-		Assert.isTrue(handyWorker.getBan() == false);
+		Assert.isTrue(handyWorker.getBan() != true);
 		Assert.notNull(handyWorker.getSurname());
 		Assert.notNull(handyWorker.getUserAccount());
+		Assert.notNull(handyWorker.getMake());
+		Assert.notNull(handyWorker.getScore());
 
 		HandyWorker res;
 		res = this.handyWorkerRepository.save(handyWorker);
@@ -111,7 +127,7 @@ public class HandyWorkerService {
 		return res;
 	}
 
-	//Returns logged customer from his or her handyWorker
+	//Returns logged customer from his or her userAccount
 	public HandyWorker findByUserAccount(final UserAccount userAccount) {
 		HandyWorker res;
 		Assert.notNull(userAccount);

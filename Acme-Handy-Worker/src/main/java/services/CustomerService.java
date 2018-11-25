@@ -58,6 +58,10 @@ public class CustomerService {
 		final Box out = new Box();
 		final Box spam = new Box();
 		final Box in = new Box();
+		out.setPredefined(true);
+		in.setPredefined(true);
+		spam.setPredefined(true);
+		trash.setPredefined(true);
 		final List<Box> predefined = new ArrayList<Box>();
 		predefined.add(in);
 		predefined.add(out);
@@ -87,21 +91,20 @@ public class CustomerService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		//Modified customer must be logged customer
-
 		final Customer logCustomer;
-		customer2 = this.customerService.findByPrincipal();
-		Assert.notNull(customer2);
-		Assert.notNull(customer2.getId());
-		Assert.isTrue(customer.getBan() == false);
+		logCustomer = this.findByPrincipal();
+		Assert.notNull(logCustomer);
+		Assert.notNull(logCustomer.getId());
 
 		//Restrictions
 		Assert.notNull(customer.getName());
 		Assert.notNull(customer.getEmail());
 		Assert.notNull(customer.getPhoneNumber());
 		Assert.notNull(customer.getAddress());
-		Assert.isTrue(customer.getBan() == false);
+		Assert.isTrue(customer.getBan() != true);
 		Assert.notNull(customer.getSurname());
 		Assert.notNull(customer.getUserAccount());
+		Assert.notNull(customer.getScore());
 
 		Customer res;
 		res = this.customerRepository.save(customer);
