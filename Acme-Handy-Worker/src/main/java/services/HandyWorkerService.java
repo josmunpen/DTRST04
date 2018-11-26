@@ -14,6 +14,7 @@ import repositories.HandyWorkerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Administrator;
 import domain.Box;
 import domain.HandyWorker;
 import domain.SocialProfile;
@@ -26,8 +27,10 @@ public class HandyWorkerService {
 	@Autowired
 	public HandyWorkerRepository	handyWorkerRepository;
 
-
 	//Services
+	@Autowired
+	public AdministratorService		administratorService;
+
 
 	//Constructor
 	public HandyWorkerService() {
@@ -146,5 +149,14 @@ public class HandyWorkerService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		return this.handyWorkerRepository.handyWorkersWithMoreApplications();
+	}
+
+	//38.5
+	public Collection<HandyWorker> topThreeHandyWorkersByComplaints() {
+		final Administrator admin;
+		admin = this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+
+		return this.handyWorkerRepository.topThreeHandyWorkersByComplaints();
 	}
 }

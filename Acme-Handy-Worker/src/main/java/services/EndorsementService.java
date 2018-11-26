@@ -96,4 +96,38 @@ public class EndorsementService {
 		this.endorsementRepository.delete(endorsement);
 
 	}
+
+	//49.2
+	public Endorsement saveByHandyWorker(final Endorsement endorsement) {
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+		Assert.isTrue(endorsement.getEndorser().getUserAccount().equals(user));
+
+		Assert.notNull(endorsement);
+		Assert.notNull(endorsement.getId());
+		Assert.notNull(endorsement.getComment());
+		Assert.notNull(endorsement.getMoment());
+
+		final Endorsement res = this.endorsementRepository.save(endorsement);
+
+		return res;
+	}
+
+	public void deleteByHandyWorker(final Endorsement endorsement) {
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+		Assert.isTrue(endorsement.getEndorser().getUserAccount().equals(user));
+
+		Assert.notNull(endorsement);
+		Assert.notNull(endorsement.getId());
+		Assert.notNull(endorsement.getComment());
+		Assert.notNull(endorsement.getMoment());
+
+		this.endorsementRepository.delete(endorsement);
+
+	}
 }

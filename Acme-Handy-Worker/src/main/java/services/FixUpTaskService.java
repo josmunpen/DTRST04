@@ -13,6 +13,7 @@ import repositories.FixUpTaskRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Administrator;
 import domain.Category;
 import domain.Customer;
 import domain.FixUpTask;
@@ -31,6 +32,9 @@ public class FixUpTaskService {
 
 	@Autowired
 	public HandyWorkerService	handyWorkerService;
+
+	@Autowired
+	public AdministratorService	administratorService;
 
 
 	//Constructor
@@ -161,5 +165,22 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		return this.fixUpTaskRepository.maximunPriceStatistics();
+	}
+
+	//38.5
+	public ArrayList<Object> complaintsStatistics() {
+		final Administrator admin;
+		admin = this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+
+		return this.fixUpTaskRepository.complaintsStatistics();
+	}
+
+	public double fixUpTasksWithComplaints() {
+		final Administrator admin;
+		admin = this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+
+		return this.fixUpTaskRepository.fixUpTasksWithComplaints();
 	}
 }

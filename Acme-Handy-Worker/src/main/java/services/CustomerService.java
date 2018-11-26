@@ -14,6 +14,7 @@ import repositories.CustomerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Administrator;
 import domain.Box;
 import domain.Customer;
 import domain.FixUpTask;
@@ -27,8 +28,9 @@ public class CustomerService {
 	@Autowired
 	private CustomerRepository	customerRepository;
 
-
 	//Services
+	public AdministratorService	administratorService;
+
 
 	//Constructor
 	public CustomerService() {
@@ -169,5 +171,14 @@ public class CustomerService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		return this.customerRepository.customersWithMoreFixUpTasks();
+	}
+
+	//38.5
+	public Collection<Customer> topThreeCustomersbyComplaints() {
+		final Administrator admin;
+		admin = this.administratorService.findByPrincipal();
+		Assert.notNull(admin);
+
+		return this.customerRepository.topThreeCustomersByComplaints();
 	}
 }
