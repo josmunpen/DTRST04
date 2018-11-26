@@ -16,7 +16,6 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
 import domain.Box;
-import domain.Customer;
 import domain.Customisation;
 import domain.Message;
 
@@ -31,9 +30,9 @@ public class MessageService {
 	//Services
 	@Autowired
 	public ActorService			actorService;
-	
+
 	@Autowired
-	public CustomisationService customisationService;
+	public CustomisationService	customisationService;
 
 
 	//Constructor
@@ -52,7 +51,6 @@ public class MessageService {
 		Assert.notNull(logActor.getId());
 		res.setSender(logActor);
 
-		
 		//TODO:Recipient
 		return res;
 	}
@@ -74,25 +72,22 @@ public class MessageService {
 		c.setAuthority(Authority.REFEREE);
 		d.setAuthority(Authority.ADMIN);
 		e.setAuthority(Authority.SPONSOR);
-		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b)
-				|| user.getAuthorities().contains(c)|| user.getAuthorities().contains(d)|| 
-				user.getAuthorities().contains(e));
+		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b) || user.getAuthorities().contains(c) || user.getAuthorities().contains(d) || user.getAuthorities().contains(e));
 
 		//Restrictions
 		Assert.notNull(message.getMoment());
-		Assert.isTrue(message.getPriority()=="HIGH"||message.getPriority()=="LOW"||message.getPriority()=="NEUTRAL");
+		Assert.isTrue(message.getPriority() == "HIGH" || message.getPriority() == "LOW" || message.getPriority() == "NEUTRAL");
 		Assert.notNull(message.getBody());
 		Assert.notNull(message.getSubject());
-		Collection<Customisation> customisation=this.customisationService.findAll();
-		List<Customisation> customisation1=new ArrayList<Customisation>(customisation);
-		List<String> l1=new ArrayList<String>(customisation1.get(0).getSpamWords());
-		String asunto=message.getSubject();
-		for(String spamWord:l1) {
-			if(asunto.contains(spamWord)) {
+		final Collection<Customisation> customisation = this.customisationService.findAll();
+		final List<Customisation> customisation1 = new ArrayList<Customisation>(customisation);
+		final List<String> l1 = new ArrayList<String>(customisation1.get(0).getSpamWords());
+		final String asunto = message.getSubject();
+		for (final String spamWord : l1)
+			if (asunto.contains(spamWord)) {
 				message.setFlagSpam(true);
 				break;
 			}
-		}
 		Assert.isTrue(message.getFlagSpam() == false);
 		Assert.notNull(message.getSender());
 		Assert.notNull(message.getRecipient());
@@ -103,7 +98,7 @@ public class MessageService {
 		Assert.notNull(logActor);
 		Assert.notNull(logActor.getId());
 		Assert.isTrue(logActor.equals(message.getSender()));
-		
+
 		//Message saves in sender's out box
 		for (final Box box : logActor.getBoxes())
 			if (box.getName() == "out") {
@@ -111,23 +106,22 @@ public class MessageService {
 				col.add(message);
 				box.setMessages(col);
 			}
-		
+
 		//Message saves in recipient's corresponding box
-		Actor recipient=message.getRecipient();
-		for (final Box box : recipient.getBoxes()) {
-			if(box.getName()=="in" && !message.getFlagSpam()) {
-				
-					final Collection<Message> col=box.getMessages();
-					col.add(message);
-					box.setMessages(col);
-					
-				}else if(box.getName()=="spam" && message.getFlagSpam()) {
-						final Collection<Message> col=box.getMessages();
-						col.add(message);
-						box.setMessages(col);
+		final Actor recipient = message.getRecipient();
+		for (final Box box : recipient.getBoxes())
+			if (box.getName() == "in" && !message.getFlagSpam()) {
+
+				final Collection<Message> col = box.getMessages();
+				col.add(message);
+				box.setMessages(col);
+
+			} else if (box.getName() == "spam" && message.getFlagSpam()) {
+				final Collection<Message> col = box.getMessages();
+				col.add(message);
+				box.setMessages(col);
 
 			}
-		}
 
 		final Message res;
 
@@ -152,10 +146,8 @@ public class MessageService {
 		c.setAuthority(Authority.REFEREE);
 		d.setAuthority(Authority.SPONSOR);
 		e.setAuthority(Authority.ADMIN);
-		
-		Assert.isTrue(user.getAuthorities().contains(a)||user.getAuthorities().contains(b)
-				||user.getAuthorities().contains(c)||user.getAuthorities().contains(d)||
-				user.getAuthorities().contains(e));
+
+		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b) || user.getAuthorities().contains(c) || user.getAuthorities().contains(d) || user.getAuthorities().contains(e));
 
 		//Restrictions
 		Assert.notNull(message.getMoment());

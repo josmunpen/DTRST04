@@ -131,14 +131,14 @@ public class CustomerService {
 	//TODO:Terminar la Querie de findByFixUpTask
 	public Customer findByFixUpTask(final FixUpTask fixUpTask) {
 		//Logged user must be a handyWorker
-				final Authority a = new Authority();
-				final UserAccount user = LoginService.getPrincipal();
-				a.setAuthority(Authority.HANDYWORKER);
-				Assert.isTrue(user.getAuthorities().contains(a));
-				
-				Customer res;
-				res=this.customerRepository.findByFixUpTask(fixUpTask.getId());
-				return res;
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		Customer res;
+		res = this.customerRepository.findByFixUpTask(fixUpTask.getId());
+		return res;
 	}
 	//Returns logged customer from his or her userAccount
 	public Customer findByUserAccount(final UserAccount userAccount) {
@@ -151,12 +151,23 @@ public class CustomerService {
 	}
 
 	//12.5
-	//TODO:logged
 	public ArrayList<Object> fixUpTasksStatistics() {
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
 		return this.customerRepository.fixUpTaskStatistics();
 	}
 
 	public Collection<Customer> customersWithMoreFixUpTasks() {
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
 		return this.customerRepository.customersWithMoreFixUpTasks();
 	}
 }

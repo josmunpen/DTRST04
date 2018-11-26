@@ -138,8 +138,13 @@ public class HandyWorkerService {
 	}
 
 	//12.5
-	//TODO: login
 	public Collection<HandyWorker> handyWorkersWithMoreApplications() {
+		//Logged user must be a customer
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
 		return this.handyWorkerRepository.handyWorkersWithMoreApplications();
 	}
 }

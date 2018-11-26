@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.WarrantyRepository;
-import domain.Administrator;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 import domain.Warranty;
 
 @Service
@@ -23,11 +25,19 @@ public class WarrantyService {
 
 	//12.2
 	public void delete(final Warranty warranty) {
-		final Administrator admin;
-		admin = this.administratorService.findByPrincipal();
-		Assert.notNull(admin);
 
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		Assert.notNull(warranty);
+		Assert.notNull(warranty.getId());
 		Assert.isTrue(warranty.isFinalMode() == false);
+		Assert.notNull(warranty.getApplicableLaws());
+		Assert.notNull(warranty.getTitle());
+		Assert.notNull(warranty.getTerms());
 
 		this.warrantyRepository.delete(warranty);
 
@@ -35,16 +45,22 @@ public class WarrantyService {
 
 	//12.2
 	public Warranty save(final Warranty warranty) {
-		final Administrator admin;
-		admin = this.administratorService.findByPrincipal();
-		Assert.notNull(admin);
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
 
+		Assert.notNull(warranty);
+		Assert.notNull(warranty.getId());
 		Assert.isTrue(warranty.isFinalMode() == false);
+		Assert.notNull(warranty.getApplicableLaws());
+		Assert.notNull(warranty.getTitle());
+		Assert.notNull(warranty.getTerms());
 
-		this.warrantyRepository.delete(warranty.getId());
-		this.warrantyRepository.save(warranty);
+		final Warranty res = this.warrantyRepository.save(warranty);
 
-		return warranty;
-
+		return res;
 	}
+
 }

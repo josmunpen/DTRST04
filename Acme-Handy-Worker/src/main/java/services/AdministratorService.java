@@ -1,8 +1,6 @@
 
 package services;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,18 +24,20 @@ public class AdministratorService {
 
 	public Administrator create() {
 
-		//the logged user must be an administrator
-		final Administrator admin;
-		admin = this.findByPrincipal();
-		Assert.notNull(admin);
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
 
-		final UserAccount user = new UserAccount();
-		final Authority au = new Authority();
-		au.setAuthority(Authority.ADMIN);
-		final ArrayList<Authority> a = new ArrayList<>();
-		a.add(au);
-		user.setAuthorities(a);
-		admin.setUserAccount(user);
+		Administrator admin;
+		admin = new Administrator();
+
+		final UserAccount newUser = new UserAccount();
+		final Authority ad = new Authority();
+		ad.setAuthority(Authority.ADMIN);
+		newUser.addAuthority(ad);
+		admin.setUserAccount(newUser);
 
 		return admin;
 	}
