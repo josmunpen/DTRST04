@@ -24,10 +24,10 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 	 * Collection<FixUpTask> findByCustomerId(int customerId);
 	 */
 
-	//Query 11.2
+	//TODO:Query 11.2
 	/*
-	 * static final String qry = "select f from FixUpTask f";
-	 * if(keyword)
+	 * @Query("select f from FixUpTask where f.description like '%?1%' or f.address like '%?1%' or " +
+	 * "f.category.name = ?2 or f.")
 	 */
 
 	//12.5
