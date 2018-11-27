@@ -14,6 +14,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Customer;
 import domain.Endorsement;
+import domain.HandyWorker;
 
 @Service
 @Transactional
@@ -27,6 +28,9 @@ public class EndorsementService {
 	@Autowired
 	public CustomerService			customerService;
 
+	@Autowired
+	public HandyWorkerService		handyWorkerService;
+
 
 	//Constructor
 	public EndorsementService() {
@@ -34,7 +38,7 @@ public class EndorsementService {
 	}
 
 	//Simple CRUD methods
-	//48
+	//48.1
 	public Endorsement create() {
 		//Logged user must be a customer
 		final Authority a = new Authority();
@@ -43,7 +47,7 @@ public class EndorsementService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		final Endorsement res = new Endorsement();
-		//TODO: Sender y recipient?
+		//TODO: Sender y recipient? El recipient tiene que haber trabajado para el customer
 
 		return res;
 	}
@@ -65,25 +69,34 @@ public class EndorsementService {
 
 	}
 
-	public Endorsement save(final Endorsement endorsement) {
+	public Endorsement saveByCustomer(final Endorsement endorsement) {
 		//Logged user must be a customer
 		final Authority a = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
+		//Logged user must be endorsement's sender
+		final Customer sender;
+		sender = this.customerService.findByPrincipal();
+		Assert.notNull(sender);
+		Assert.notNull(sender.getId());
+		Assert.isTrue(sender.equals(endorsement.getSender()));
+
 		//Restrictions
-		//TODO: Atributos tipo DATE, sender y recipient
 		Assert.notNull(endorsement.getMoment());
+		Assert.notNull(endorsement.getComment());
+		Assert.notNull(endorsement.getSender());
+		Assert.notNull(endorsement.getRecipient());
 
 		final Endorsement res;
 		res = this.endorsementRepository.save(endorsement);
 		return res;
 	}
 
-	public void delete(final Endorsement endorsement) {
-		//TODO:Comprobacion de los 3 pasos
+	public void deleteByCustomer(final Endorsement endorsement) {
 		Assert.notNull(endorsement);
+		Assert.notNull(endorsement.getId());
 		Assert.isTrue(endorsement.getId() != 0);
 		Assert.isTrue(this.endorsementRepository.exists(endorsement.getId()));
 
@@ -93,39 +106,91 @@ public class EndorsementService {
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
+		//Logged user must be endorsement's sender
+		final Customer sender;
+		sender = this.customerService.findByPrincipal();
+		Assert.notNull(sender);
+		Assert.notNull(sender.getId());
+		Assert.isTrue(sender.equals(endorsement.getSender()));
+
+		//Restrictions
+		Assert.notNull(endorsement.getMoment());
+		Assert.notNull(endorsement.getComment());
+		Assert.notNull(endorsement.getSender());
+		Assert.notNull(endorsement.getRecipient());
+
 		this.endorsementRepository.delete(endorsement);
 
 	}
 
 	//49.2
-	public Endorsement saveByHandyWorker(final Endorsement endorsement) {
+
+	public Collection<Endorsement> findByHandyWorker() {
+		//Logged user must be a customer
 		final Authority a = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(user.getAuthorities().contains(a));
-		Assert.isTrue(endorsement.getEndorser().getUserAccount().equals(user));
 
-		Assert.notNull(endorsement);
-		Assert.notNull(endorsement.getId());
-		Assert.notNull(endorsement.getComment());
+		Collection<Endorsement> res;
+		final HandyWorker handyWorker;
+		handyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(handyWorker);
+
+		res = this.endorsementRepository.findByHandyWorkerId(handyWorker.getId());
+		return res;
+
+	}
+
+	public Endorsement saveByHandyWorker(final Endorsement endorsement) {
+		//Logged user must be a handy worker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		//Logged user must be endorsement's sender
+		final HandyWorker sender;
+		sender = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(sender);
+		Assert.notNull(sender.getId());
+		Assert.isTrue(sender.equals(endorsement.getSender()));
+
+		//Restrictions
 		Assert.notNull(endorsement.getMoment());
+		Assert.notNull(endorsement.getComment());
+		Assert.notNull(endorsement.getSender());
+		Assert.notNull(endorsement.getRecipient());
 
-		final Endorsement res = this.endorsementRepository.save(endorsement);
-
+		final Endorsement res;
+		res = this.endorsementRepository.save(endorsement);
 		return res;
 	}
 
 	public void deleteByHandyWorker(final Endorsement endorsement) {
-		final Authority a = new Authority();
-		final UserAccount user = LoginService.getPrincipal();
-		a.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(user.getAuthorities().contains(a));
-		Assert.isTrue(endorsement.getEndorser().getUserAccount().equals(user));
-
 		Assert.notNull(endorsement);
 		Assert.notNull(endorsement.getId());
-		Assert.notNull(endorsement.getComment());
+		Assert.isTrue(endorsement.getId() != 0);
+		Assert.isTrue(this.endorsementRepository.exists(endorsement.getId()));
+
+		//Logged user must be a customer
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		//Logged user must be endorsement's sender
+		final Customer sender;
+		sender = this.customerService.findByPrincipal();
+		Assert.notNull(sender);
+		Assert.notNull(sender.getId());
+		Assert.isTrue(sender.equals(endorsement.getSender()));
+
+		//Restrictions
 		Assert.notNull(endorsement.getMoment());
+		Assert.notNull(endorsement.getComment());
+		Assert.notNull(endorsement.getSender());
+		Assert.notNull(endorsement.getRecipient());
 
 		this.endorsementRepository.delete(endorsement);
 

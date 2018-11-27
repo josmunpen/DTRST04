@@ -1745,184 +1745,214 @@
 	<bean id="endorsement1" class="domain.Endorsement">
 		<property name="comment" value="comment1"/>
 		<property name="moment" value="01/02/2015"/>
-		<property name="endorser" ref="handyWorker1"/>
+		<property name="sender" ref="handyWorker1"/>
+		<property name="recipient" ref="Customer1"/>
 	</bean>
 	
 	<bean id="endorsement2" class="domain.Endorsement">
 		<property name="comment" value="comment2"/>
 		<property name="moment" value="02/02/2015"/>
-		<property name="endorser" ref="handyWorker1"/>
+		<property name="sender" ref="Customer1"/>
+		<property name="recipient" ref="handyWorker1"/>
 	</bean>
 	
 	<bean id="endorsement3" class="domain.Endorsement">
 		<property name="comment" value="comment3"/>
 		<property name="moment" value="03/02/2015"/>
-		<property name="endorser" ref="handyWorker2"/>
+		<property name="sender" ref="Customer1"/>
+		<property name="recipient" ref="handyWorker2"/>
 	</bean>
 	
 	<bean id="endorsement4" class="domain.Endorsement">
 		<property name="comment" value="comment4"/>
 		<property name="moment" value="04/02/2015"/>
-		<property name="endorser" ref="handyWorker2"/>
+		<property name="sender" ref="Customer2"/>
+		<property name="recipient" ref="handyWorker2"/>
 	</bean>
 	
 	<bean id="endorsement5" class="domain.Endorsement">
 		<property name="comment" value="comment5"/>
 		<property name="moment" value="05/02/2015"/>
-		<property name="endorser" ref="Customer1"/>
+		<property name="sender" ref="Customer3"/>
+		<property name="recipient" ref="handyWorker3"/>
 	</bean>
 	
 	<bean id="endorsement6" class="domain.Endorsement">
 		<property name="comment" value="comment6"/>
 		<property name="moment" value="06/02/2015"/>
-		<property name="endorser" ref="Customer1"/>
+		<property name="sender" ref="Customer3"/>
+		<property name="recipient" ref="handyWorker4"/>
 	</bean>
 	
 	<bean id="endorsement7" class="domain.Endorsement">
 		<property name="comment" value="comment7"/>
 		<property name="moment" value="07/02/2015"/>
-		<property name="endorser" ref="Customer2"/>
+		<property name="sender" ref="Customer4"/>
+		<property name="recipient" ref="handyWorker3"/>
 	</bean>
 	
 	<bean id="endorsement8" class="domain.Endorsement">
 		<property name="comment" value="comment8"/>
 		<property name="moment" value="08/02/2015"/>
-		<property name="endorser" ref="Customer2"/>
+		<property name="sender" ref="Customer4"/>
+		<property name="recipient" ref="handyWorker4"/>
 	</bean>
 	
 	<bean id="endorsement9" class="domain.Endorsement">
 		<property name="comment" value="comment9"/>
 		<property name="moment" value="18/02/2015"/>
-		<property name="endorser" ref="handyWorker2"/>
+		<property name="sender" ref="Customer4"/>
+		<property name="recipient" ref="handyWorker5"/>
 	</bean>
 	
 	<bean id="endorsement10" class="domain.Endorsement">
 		<property name="comment" value="comment10"/>
 		<property name="moment" value="15/02/2015"/>
-		<property name="endorser" ref="handyWorker1"/>
+		<property name="sender" ref="Customer5"/>
+		<property name="recipient" ref="handyWorker4"/>
 	</bean>
 	
 	<bean id="endorsement11" class="domain.Endorsement">
 		<property name="comment" value="comment11"/>
 		<property name="moment" value="11/02/2015"/>
-		<property name="endorser" ref="handyWorker3"/>
+		<property name="sender" ref="Customer5"/>
+		<property name="recipient" ref="handyWorker5"/>
 	</bean>
 	
 	<bean id="endorsement12" class="domain.Endorsement">
 		<property name="comment" value="comment12"/>
 		<property name="moment" value="12/02/2015"/>
-		<property name="endorser" ref="handyWorker4"/>
+		<property name="sender" ref="Customer5"/>
+		<property name="recipient" ref="handyWorker5"/>
 	</bean>
 	
 	<bean id="endorsement13" class="domain.Endorsement">
 		<property name="comment" value="comment13"/>
 		<property name="moment" value="13/02/2015"/>
-		<property name="endorser" ref="handyWorker4"/>
+		<property name="sender" ref="Customer1"/>
+		<property name="recipient" ref="handyWorker1"/>
 	</bean>
 	
 	<bean id="endorsement14" class="domain.Endorsement">
 		<property name="comment" value="comment14"/>
 		<property name="moment" value="22/02/2015"/>
-		<property name="endorser" ref="handyWorker5"/>
+		<property name="sender" ref="Customer2"/>
+		<property name="recipient" ref="handyWorker1"/>
 	</bean>
 	
 	<bean id="endorsement15" class="domain.Endorsement">
 		<property name="comment" value="comment15"/>
 		<property name="moment" value="06/12/2015"/>
-		<property name="endorser" ref="handyWorker3"/>
+		<property name="sender" ref="Customer1"/>
+		<property name="recipient" ref="handyWorker1"/>
 	</bean>
 	
 	<bean id="endorsement16" class="domain.Endorsement">
 		<property name="comment" value="comment16"/>
 		<property name="moment" value="15/06/2015"/>
-		<property name="endorser" ref="handyWorker3"/>
+		<property name="sender" ref="handyWorker1"/>
+		<property name="recipient" ref="Customer1"/>
 	</bean>
 	
 	<bean id="endorsement17" class="domain.Endorsement">
 		<property name="comment" value="comment17"/>
 		<property name="moment" value="17/07/2017"/>
-		<property name="endorser" ref="handyWorker5"/>
+		<property name="sender" ref="handyWorker1"/>
+		<property name="recipient" ref="Customer2"/>
 	</bean>
 	
 	<bean id="endorsement18" class="domain.Endorsement">
 		<property name="comment" value="comment18"/>
 		<property name="moment" value="18/08/2018"/>
-		<property name="endorser" ref="handyWorker3"/>
+		<property name="sender" ref="handyWorker2"/>
+		<property name="recipient" ref="Customer1"/>
 	</bean>
 	
 	<bean id="endorsement19" class="domain.Endorsement">
 		<property name="comment" value="comment19"/>
 		<property name="moment" value="19/09/2015"/>
-		<property name="endorser" ref="handyWorker3"/>
+		<property name="sender" ref="handyWorker2"/>
+		<property name="recipient" ref="Customer2"/>
 	</bean>
 	
 	<bean id="endorsement20" class="domain.Endorsement">
 		<property name="comment" value="comment20"/>
 		<property name="moment" value="28/09/2015"/>
-		<property name="endorser" ref="Customer2"/>
-	</bean>
+		<property name="sender" ref="handyWorker2"/>
+		<property name="recipient" ref="Customer3"/>
+	</bean> 
 		<!-- 10 ENDORSEMENTS NUEVOS -->
 	
 	<bean id="endorsement21" class="domain.Endorsement">
 		<property name="comment" value="comment21"/>
 		<property name="moment" value="16/09/2015"/>
-		<property name="endorser" ref="handyWorker1"/>
+		<property name="sender" ref="handyWorker3"/>
+		<property name="recipient" ref="Customer3"/>
 	</bean>
 	
 	<bean id="endorsement22" class="domain.Endorsement">
 		<property name="comment" value="comment22"/>
 		<property name="moment" value="22/09/2015"/>
-		<property name="endorser" ref="Customer3"/>
+		<property name="sender" ref="handyWorker3"/>
+		<property name="recipient" ref="Customer4"/>
 	</bean>
 	
 	<bean id="endorsement23" class="domain.Endorsement">
 		<property name="comment" value="comment23"/>
 		<property name="moment" value="26/09/2015"/>
-		<property name="endorser" ref="handyWorker1"/>
+		<property name="sender" ref="handyWorker4"/>
+		<property name="recipient" ref="Customer3"/>
 	</bean>
 	
 	<bean id="endorsement24" class="domain.Endorsement">
 		<property name="comment" value="comment24"/>
 		<property name="moment" value="12/09/2015"/>
-		<property name="endorser" ref="Customer4"/>
+		<property name="sender" ref="handyWorker4"/>
+		<property name="recipient" ref="Customer4"/>
 	</bean>
 	
 	<bean id="endorsement25" class="domain.Endorsement">
 		<property name="comment" value="comment25"/>
 		<property name="moment" value="20/03/2015"/>
-		<property name="endorser" ref="Customer4"/>
+		<property name="sender" ref="handyWorker5"/>
+		<property name="recipient" ref="Customer5"/>
 	</bean>
 	
 	<bean id="endorsement26" class="domain.Endorsement">
 		<property name="comment" value="comment26"/>
 		<property name="moment" value="15/04/2015"/>
-		<property name="endorser" ref="Customer5"/>
+		<property name="sender" ref="handyWorker4"/>
+		<property name="recipient" ref="Customer5"/>
 	</bean>
 	
 	<bean id="endorsement27" class="domain.Endorsement">
 		<property name="comment" value="comment27"/>
 		<property name="moment" value="10/11/2015"/>
-		<property name="endorser" ref="handyWorker2"/>
+		<property name="sender" ref="handyWorker5"/>
+		<property name="recipient" ref="Customer1"/>
 	</bean>
 	
 	<bean id="endorsement28" class="domain.Endorsement">
 		<property name="comment" value="comment28"/>
 		<property name="moment" value="27/07/2015"/>
-		<property name="endorser" ref="handyWorker2"/>
+		<property name="sender" ref="handyWorker4"/>
+		<property name="recipient" ref="Customer1"/>
 	</bean>
 	
 	<bean id="endorsement29" class="domain.Endorsement">
 		<property name="comment" value="comment29"/>
 		<property name="moment" value="10/05/2015"/>
-		<property name="endorser" ref="handyWorker3"/>
+		<property name="sender" ref="handyWorker3"/>
+		<property name="recipient" ref="Customer1"/>
 	</bean>
 	
 	<bean id="endorsement30" class="domain.Endorsement">
 		<property name="comment" value="comment30"/>
 		<property name="moment" value="22/03/2015"/>
-		<property name="endorser" ref="handyWorker3"/>
+		<property name="sender" ref="handyWorker3"/>
+		<property name="recipient" ref="Customer5"/>
 	</bean>
-	
+
 	<!-- Messages -->
 	
 	<bean id="message1" class="domain.Message">
@@ -2090,5 +2120,57 @@
 		<property name="pageURL" value="http://www.sponsorship4y.com"/>
 		<property name="CreditCard" ref="CreditCard1"/>
 	</bean>	
+	<bean id="customisation1" class="domain.Customisation">
+		<property name="systemName" value="Acme Handy Worker"/>
+		<property name="bannerURL" value="http://tinyurl.com/acme-handy-worker-logo"/>
+		<property name="welcomeMessage" value="Welcome to Acme Handy Worker! Price, quality, and trust in a single place."/>
+		<property name="VATPercentage" value="21"/>
+		<property name="phoneNumberCountryCode" value="+34"/>
+		<property name="finderDuration" value="1"/>
+		<property name="resultsNumber" value="10"/>
+		<property name = "spamWords">
+			<list>
+				<value>sex</value>
+				<value>viagra</value>
+				<value>cialis</value>
+				<value>one million</value>
+				<value>you've been selected</value>
+				<value>Nigeria</value>
+				<value>sexo</value>
+				<value>un millon</value>
+				<value>ha sido seleccionado</value>
+			</list>
+		</property>		
+		<property name = "creditCardMakes">
+			<list>
+				<value>VISA</value>
+				<value>MASTER</value>
+				<value>DINNERS</value>
+				<value>AMEX</value>
+			</list>
+		</property>
+		<property name = "negativeWords">
+			<list>
+				<value>not</value>
+				<value>bad</value>
+				<value>horrible</value>
+				<value>average</value>
+				<value>disaster</value>
+			</list>
+		</property>
+		<property name = "positiveWords">
+			<list>
+				<value>good</value>
+				<value>fantastic</value>
+				<value>excellent</value>
+				<value>great</value>
+				<value>amazing</value>
+				<value>terrific</value>
+				<value>beautiful</value>		
+			</list>
+		</property>
+	</bean>
+	
+	
 	</beans>
 	

@@ -18,7 +18,8 @@ public class Endorsement extends DomainEntity {
 
 	private String		comment;
 	private Date		moment;
-	private Endorser	endorser;
+	private Endorser	sender;
+	private Endorser	recipient;
 
 
 	@NotNull
@@ -41,12 +42,22 @@ public class Endorsement extends DomainEntity {
 
 	@Valid
 	@ManyToOne(optional = false)
-	public Endorser getEndorser() {
-		return this.endorser;
+	public Endorser getSender() {
+		return this.sender;
 	}
 
-	public void setEndorser(final Endorser endorser) {
-		this.endorser = endorser;
+	public void setSender(final Endorser sender) {
+		this.sender = sender;
+	}
+
+	@Valid
+	@ManyToOne(optional = false)
+	public Endorser getRecipient() {
+		return this.recipient;
+	}
+
+	public void setRecipient(final Endorser recipient) {
+		this.recipient = recipient;
 	}
 
 }

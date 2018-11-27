@@ -12,8 +12,12 @@ import domain.Endorsement;
 @Repository
 public interface EndorsementRepository extends JpaRepository<Endorsement, Integer> {
 
-	//48
+	//48.1
 	@Query("select distinct c.endorsements from Customer c where c.id=?1")
 	Collection<Endorsement> findByCustomerId(int customerId);
+
+	//49.2
+	@Query("select distinct h.endorsements from HandyWorker h where h.id=?1")
+	Collection<Endorsement> findByHandyWorkerId(int handyWorkerId);
 
 }
