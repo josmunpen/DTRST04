@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +51,21 @@ public class MessageService {
 		Assert.notNull(logActor);
 		Assert.notNull(logActor.getId());
 		res.setSender(logActor);
-
-		//TODO:Recipient
+		//TODO: Revisar null
+		final Actor recipient = null;
+		res.setRecipient(recipient);
+		res.setMoment(new Date());
+		res.setPriority("");
+		res.setTag("");
+		res.setBody("");
+		res.setSubject("");
+		res.setFlagSpam(false);
 		return res;
 	}
-
 	//9.3
 	public Message save(final Message message) {
 		Assert.notNull(message);
-		Assert.isTrue(message.getId() != 0);
+		Assert.isTrue(message.getId() == 0);
 
 		//Logged user must be a customer/handyworker
 		final Authority a = new Authority();
@@ -75,22 +82,18 @@ public class MessageService {
 		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b) || user.getAuthorities().contains(c) || user.getAuthorities().contains(d) || user.getAuthorities().contains(e));
 
 		//Restrictions
-		Assert.notNull(message.getMoment());
-		Assert.isTrue(message.getPriority() == "HIGH" || message.getPriority() == "LOW" || message.getPriority() == "NEUTRAL");
-		Assert.notNull(message.getBody());
-		Assert.notNull(message.getSubject());
 		final Collection<Customisation> customisation = this.customisationService.findAll();
 		final List<Customisation> customisation1 = new ArrayList<Customisation>(customisation);
-		final List<String> l1 = new ArrayList<String>(customisation1.get(0).getSpamWords());
+		final List<String> spamWords = new ArrayList<String>(customisation1.get(0).getSpamWords());
 		final String asunto = message.getSubject();
-		for (final String spamWord : l1)
-			if (asunto.contains(spamWord)) {
+		final String cuerpo = message.getBody();
+		final String texto = asunto + cuerpo;
+		for (final String spamWord : spamWords)
+			if (texto.toLowerCase().contains(spamWord)) {
 				message.setFlagSpam(true);
 				break;
 			}
 		Assert.isTrue(message.getFlagSpam() == false);
-		Assert.notNull(message.getSender());
-		Assert.notNull(message.getRecipient());
 
 		//Logged actor is sender
 		final Actor logActor;
@@ -100,12 +103,20 @@ public class MessageService {
 		Assert.isTrue(logActor.equals(message.getSender()));
 
 		//Message saves in sender's out box
+
 		for (final Box box : logActor.getBoxes())
 			if (box.getName() == "out") {
 				final Collection<Message> col = box.getMessages();
 				col.add(message);
 				box.setMessages(col);
 			}
+
+		/*
+		 * final List<Box> logBoxes = new ArrayList<Box>(logActor.getBoxes());
+		 * final Box in = logBoxes.get(1);
+		 * final Collection<Message> inMessages = in.getMessages();
+		 * inMessages.add(message);
+		 */
 
 		//Message saves in recipient's corresponding box
 		final Actor recipient = message.getRecipient();
@@ -150,13 +161,7 @@ public class MessageService {
 		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b) || user.getAuthorities().contains(c) || user.getAuthorities().contains(d) || user.getAuthorities().contains(e));
 
 		//Restrictions
-		Assert.notNull(message.getMoment());
-		Assert.notNull(message.getPriority());
-		Assert.notNull(message.getBody());
-		Assert.notNull(message.getSubject());
 		Assert.isTrue(message.getFlagSpam() == false);
-		Assert.notNull(message.getSender());
-		Assert.notNull(message.getRecipient());
 
 		this.messageRepository.delete(message);
 

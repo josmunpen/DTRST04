@@ -24,9 +24,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
 
 	//10.2
 	//Sacamos la Appplication cuyo id pertenece a la application que queremos modificar
-	@Query("select a from Application where a.id=?1")
+	@Query("select a from Application a where a.id=?1")
 	Application findById(int applicationId);
-	
+
 	//12.5
 	@Query("select count(a1)*1.0 / (select count(a2)*1.0 from Application a2) from Application a1 where a1.status = 'pending'")
 	double pendingApplications();

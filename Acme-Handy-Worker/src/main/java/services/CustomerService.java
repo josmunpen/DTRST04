@@ -41,7 +41,7 @@ public class CustomerService {
 
 	//8.1
 	public Customer create() {
-		//User cant be logged to register
+		//User can't be logged to register
 		final Authority a = new Authority();
 		final Authority b = new Authority();
 		final Authority c = new Authority();
@@ -57,10 +57,16 @@ public class CustomerService {
 
 		Customer result;
 		result = new Customer();
+
+		//Actor
 		final Box trash = new Box();
 		final Box out = new Box();
 		final Box spam = new Box();
 		final Box in = new Box();
+		trash.setName("trash");
+		in.setName("in");
+		out.setName("out");
+		spam.setName("spam");
 		out.setPredefined(true);
 		in.setPredefined(true);
 		spam.setPredefined(true);
@@ -70,21 +76,31 @@ public class CustomerService {
 		predefined.add(out);
 		predefined.add(spam);
 		predefined.add(trash);
-		result.setSocialProfiles(new ArrayList<SocialProfile>());
-		result.setBoxes(new ArrayList<Box>(predefined));
-		result.setScore(0);
+
 		final UserAccount newUser = new UserAccount();
 		final Authority f = new Authority();
 		f.setAuthority(Authority.CUSTOMER);
 		newUser.addAuthority(f);
+
+		result.setBoxes(new ArrayList<Box>(predefined));
+		result.setSocialProfiles(new ArrayList<SocialProfile>());
+		result.setName("");
+		result.setEmail("");
+		result.setAddress("");
+		result.setSurname("");
+		result.setPhoneNumber("");
+		result.setPhotoURL("");
+
+		//HandyWorker
+		result.setScore(0);
+		result.setFixUpTasks(new ArrayList<FixUpTask>());
 		result.setUserAccount(user);
 		return result;
 	}
-
 	//9.2
 	public Customer save(final Customer customer) {
 		Assert.notNull(customer);
-		Assert.notNull(customer.getId());
+		Assert.isTrue(customer.getId() != 0);
 		Assert.isTrue(!customer.getBan());
 
 		//Logged user must be a customer
@@ -100,14 +116,7 @@ public class CustomerService {
 		Assert.notNull(logCustomer.getId());
 
 		//Restrictions
-		Assert.notNull(customer.getName());
-		Assert.notNull(customer.getEmail());
-		Assert.notNull(customer.getPhoneNumber());
-		Assert.notNull(customer.getAddress());
 		Assert.isTrue(customer.getBan() != true);
-		Assert.notNull(customer.getSurname());
-		Assert.notNull(customer.getUserAccount());
-		Assert.notNull(customer.getScore());
 
 		Customer res;
 		res = this.customerRepository.save(customer);

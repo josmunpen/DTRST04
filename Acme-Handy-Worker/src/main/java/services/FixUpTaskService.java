@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,13 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Administrator;
+import domain.Application;
 import domain.Category;
 import domain.Customer;
 import domain.FixUpTask;
+import domain.Money;
+import domain.Phase;
+import domain.Warranty;
 
 @Service
 @Transactional
@@ -55,15 +60,26 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		final FixUpTask res = new FixUpTask();
-		final Category cat = new Category();
-		cat.setName("CATEGORY");
-		res.setCategory(cat);
+
+		res.setTicker("");
+		res.setDescription("");
+		res.setAddress("");
+		res.setMaximumPrice(new Money());
+		res.setStartDate(new Date());
+		res.setEndDate(new Date());
+		res.setCategory(new Category());
+		final ArrayList<Application> applications = new ArrayList<Application>();
+		res.setApplications(applications);
+		final ArrayList<Phase> phases = new ArrayList<Phase>();
+		res.setPhases(phases);
+		final ArrayList<Warranty> warranties = new ArrayList<Warranty>();
+		res.setWarranty(warranties);
+
 		return res;
 	}
-
 	public FixUpTask save(final FixUpTask fixUpTask) {
 		Assert.notNull(fixUpTask);
-		Assert.notNull(fixUpTask.getId());
+		Assert.isTrue(fixUpTask.getId() != 0);
 
 		//Logged user must be a customer
 		final Authority a = new Authority();
@@ -75,18 +91,11 @@ public class FixUpTaskService {
 		final Customer logCustomer;
 		logCustomer = this.customerService.findByPrincipal();
 		Assert.notNull(logCustomer);
-		Assert.notNull(logCustomer.getId());
+		Assert.isTrue(logCustomer.getId() != 0);
 		Assert.isTrue(logCustomer.getFixUpTasks().contains(fixUpTask));
 
-		//Restrictions
-		Assert.notNull(fixUpTask.getMoment());
-		Assert.notNull(fixUpTask.getTicker());
-		Assert.notNull(fixUpTask.getAddress());
-		Assert.notNull(fixUpTask.getDescription());
-		Assert.notNull(fixUpTask.getStartDate());
-		Assert.notNull(fixUpTask.getEndDate());
+		//Business logic
 		Assert.isTrue(fixUpTask.getStartDate().before(fixUpTask.getEndDate()));
-		Assert.notNull(fixUpTask.getCategory());
 
 		final FixUpTask res;
 		res = this.fixUpTaskRepository.save(fixUpTask);
@@ -95,7 +104,7 @@ public class FixUpTaskService {
 
 	public void delete(final FixUpTask fixUpTask) {
 		Assert.notNull(fixUpTask);
-		Assert.notNull(fixUpTask.getId());
+		Assert.isTrue(fixUpTask.getId() != 0);
 		Assert.isTrue(this.fixUpTaskRepository.exists(fixUpTask.getId()));
 
 		//Logged user must be a customer
@@ -108,8 +117,11 @@ public class FixUpTaskService {
 		final Customer logCustomer;
 		logCustomer = this.customerService.findByPrincipal();
 		Assert.notNull(logCustomer);
-		Assert.notNull(logCustomer.getId());
+		Assert.isTrue(logCustomer.getId() != 0);
 		Assert.isTrue(logCustomer.getFixUpTasks().contains(fixUpTask));
+
+		//Business logic
+		Assert.isTrue(fixUpTask.getStartDate().before(fixUpTask.getEndDate()));
 
 		this.fixUpTaskRepository.delete(fixUpTask);
 	}
@@ -126,7 +138,7 @@ public class FixUpTaskService {
 		final Customer customer;
 		customer = this.customerService.findByPrincipal();
 		Assert.notNull(customer);
-		Assert.notNull(customer.getId());
+		Assert.isTrue(customer.getId() != 0);
 
 		res = this.fixUpTaskRepository.findByCustomerId(customer.getId());
 		return res;

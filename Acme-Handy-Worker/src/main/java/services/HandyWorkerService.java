@@ -15,8 +15,11 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Administrator;
+import domain.Application;
 import domain.Box;
+import domain.Finder;
 import domain.HandyWorker;
+import domain.Phase;
 import domain.SocialProfile;
 
 @Service
@@ -41,7 +44,7 @@ public class HandyWorkerService {
 
 	//8.1
 	public HandyWorker create() {
-		//User cant be logged to register
+		//User can't be logged to register
 		final Authority a = new Authority();
 		final Authority b = new Authority();
 		final Authority c = new Authority();
@@ -57,34 +60,58 @@ public class HandyWorkerService {
 
 		HandyWorker result;
 		result = new HandyWorker();
+
+		//Actor
 		final Box trash = new Box();
 		final Box out = new Box();
 		final Box spam = new Box();
 		final Box in = new Box();
+		trash.setName("trash");
+		in.setName("in");
+		out.setName("out");
+		spam.setName("spam");
+		out.setPredefined(true);
+		in.setPredefined(true);
+		spam.setPredefined(true);
+		trash.setPredefined(true);
 		final List<Box> predefined = new ArrayList<Box>();
 		predefined.add(in);
 		predefined.add(out);
 		predefined.add(spam);
 		predefined.add(trash);
-		out.setPredefined(true);
-		in.setPredefined(true);
-		spam.setPredefined(true);
-		trash.setPredefined(true);
-		result.setSocialProfiles(new ArrayList<SocialProfile>());
-		result.setBoxes(new ArrayList<Box>(predefined));
-		result.setScore(0);
+
 		final UserAccount newUser = new UserAccount();
 		final Authority f = new Authority();
 		f.setAuthority(Authority.HANDYWORKER);
+		final List<Application> applications = new ArrayList<Application>();
+		final List<Phase> phases = new ArrayList<Phase>();
+		final List<Finder> finders = new ArrayList<Finder>();
 		newUser.addAuthority(f);
+
+		result.setBoxes(new ArrayList<Box>(predefined));
+		result.setSocialProfiles(new ArrayList<SocialProfile>());
+		result.setName("");
+		result.setEmail("");
+		result.setAddress("");
+		result.setSurname("");
+		result.setPhoneNumber("");
+		result.setPhotoURL("");
+		result.setApplications(applications);
+
+		//HandyWorker
+		result.setScore(0);
+
 		result.setUserAccount(user);
+		//TODO: Make name
+		result.setMake("");
+		result.setPlannedPhases(phases);
+		result.setFinders(finders);
 		return result;
 	}
-
 	//9.2
 	public HandyWorker save(final HandyWorker handyWorker) {
 		Assert.notNull(handyWorker);
-		Assert.notNull(handyWorker.getId());
+		Assert.isTrue(handyWorker.getId() != 0);
 		Assert.isTrue(!handyWorker.getBan());
 
 		//Logged user must be a customer
@@ -98,17 +125,6 @@ public class HandyWorkerService {
 		logHandyWorker = this.findByPrincipal();
 		Assert.notNull(logHandyWorker);
 		Assert.notNull(logHandyWorker.getId());
-
-		//Restrictions
-		Assert.notNull(handyWorker.getName());
-		Assert.notNull(handyWorker.getEmail());
-		Assert.notNull(handyWorker.getPhoneNumber());
-		Assert.notNull(handyWorker.getAddress());
-		Assert.isTrue(handyWorker.getBan() != true);
-		Assert.notNull(handyWorker.getSurname());
-		Assert.notNull(handyWorker.getUserAccount());
-		Assert.notNull(handyWorker.getMake());
-		Assert.notNull(handyWorker.getScore());
 
 		HandyWorker res;
 		res = this.handyWorkerRepository.save(handyWorker);

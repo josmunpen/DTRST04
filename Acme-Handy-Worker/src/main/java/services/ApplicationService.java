@@ -2,7 +2,9 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,11 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Application;
+import domain.CreditCard;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.HandyWorker;
+import domain.Money;
 
 @Service
 @Transactional
@@ -48,9 +52,19 @@ public class ApplicationService {
 		a.setAuthority(Authority.HANDYWORKER);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
-		return new Application();
+		final FixUpTask fixUpTask = new FixUpTask();
 
-		//TODO: FixUpTask de la application?
+		final Application res = new Application();
+
+		res.setFixUpTask(fixUpTask);
+		res.setMoment(new Date());
+		res.setStatus("");
+		res.setOfferedPrice(new Money());
+		res.setComment("");
+		res.setRejectedCause("");
+		res.setCreditCard(new CreditCard());
+
+		return new Application();
 		//TODO: 11.3 When a handy worker applies for a fix-up task...
 	}
 	//Complex methods
@@ -73,8 +87,9 @@ public class ApplicationService {
 		return res;
 	}
 
-	public Application save(final Application application) {
+	public Application saveByCustomer(final Application application) {
 		Assert.notNull(application);
+		Assert.isTrue(application.getId() != 0);
 
 		Application res;
 
@@ -84,7 +99,7 @@ public class ApplicationService {
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
-		//Logged customer is application's owner
+		//Logged customer is application's fix up task owner
 		final Customer logCustomer;
 		logCustomer = this.customerService.findByPrincipal();
 		Assert.notNull(logCustomer);
@@ -101,12 +116,40 @@ public class ApplicationService {
 		Assert.isTrue(application.getOfferedPrice() == oldApplication.getOfferedPrice());
 		Assert.notNull(application.getStatus());
 		Assert.isTrue(application.getStatus() == "pending" || application.getStatus() == "accepted" || application.getStatus() == "rejected");
-		Assert.notNull(application.getComment());
-		//L
+
 		if (application.getStatus().equals("accepted"))
 			Assert.notNull(application.getCreditCard());
 		else if (application.getStatus().equals("rejected"))
 			Assert.notNull(application.getRejectedCause());
+
+		res = this.applicationRepository.save(application);
+		return res;
+	}
+
+	public Application saveByHandyWorker(final Application application) {
+		Assert.notNull(application);
+		Assert.isTrue(application.getId() != 0);
+
+		Application res;
+
+		//Logged user must be a handy worker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		//Logged handy worker is application's owner
+		final HandyWorker logHandyWorker;
+		logHandyWorker = this.handyWorkerService.findByPrincipal();
+		Assert.notNull(logHandyWorker);
+		Assert.notNull(logHandyWorker.getId());
+		final List<Application> apps = new ArrayList<Application>();
+		apps.addAll(logHandyWorker.getApplications());
+		Assert.isTrue(apps.contains(application));
+
+		Assert.isTrue(application.getOfferedPrice().getAmount() > 0);
+
+		application.setMoment(Calendar.getInstance().getTime());
 
 		res = this.applicationRepository.save(application);
 		return res;
