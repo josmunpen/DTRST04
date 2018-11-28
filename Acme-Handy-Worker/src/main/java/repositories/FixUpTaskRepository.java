@@ -26,19 +26,19 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 	 */
 
 	//Queries 11.2
-	@Query("select f from FixUpTask where f.description like '%?1%' or f.address like '%?1%' or f.ticker like '%?1%'")
+	@Query("select f from FixUpTask f where f.description like '%?1%' or f.address like '%?1%' or f.ticker like '%?1%'")
 	Collection<FixUpTask> fixUpTaskFilterByKeyword(String keyword);
 
-	@Query("select f from FixUpTask where f.category.name like '%?1%'")
+	@Query("select f from FixUpTask f where f.category.name like '%?1%'")
 	Collection<FixUpTask> fixUpTaskFilterByCategory(String category);
 
-	@Query("select f from FixUpTask where f.amount between ?1 and ?2")
+	@Query("select f from FixUpTask f where f.maximumPrice.amount between ?1 and ?2")
 	Collection<FixUpTask> fixUpTaskFilterByRangeOfPrices(Double minPrice, Double maxPrice);
 
-	@Query("select f from FixUpTask where f.startDate between ?1 and ?2")
+	@Query("select f from FixUpTask f where f.startDate between ?1 and ?2")
 	Collection<FixUpTask> fixUpTaskFilterByRangeOfDates(Date minDate, Date maxDate);
 
-	@Query("select f from FixUpTask where f.warranty.id = ?1")
+	@Query("select f from FixUpTask f where f.warranty.id = ?1")
 	Collection<FixUpTask> fixUpTaskFilterByWarranty(Integer warrantyId);
 	//12.5
 	@Query("select avg(f.applications.size), min(f.applications.size), max(f.applications.size), stddev(f.applications.size) from FixUpTask f")
