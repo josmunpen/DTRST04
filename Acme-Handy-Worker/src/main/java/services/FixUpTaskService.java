@@ -41,6 +41,9 @@ public class FixUpTaskService {
 	@Autowired
 	public AdministratorService	administratorService;
 
+	@Autowired
+	public FinderService finderService;
+
 
 	//Constructor
 	public FixUpTaskService() {
@@ -159,6 +162,68 @@ public class FixUpTaskService {
 		return res;
 	}
 
+	//11.2
+	public Collection<FixUpTask> fixUpTaskFilterByKeyword(final String keyword) {
+		//Logged user must be a handyWorker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		Collection<FixUpTask> res;
+		res = this.fixUpTaskFilterByKeyword(keyword);
+		return res;
+
+	}
+
+	public Collection<FixUpTask> fixUpTaskFilterByCategory(final String category) {
+		//Logged user must be a handyWorker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		Collection<FixUpTask> res;
+		res = this.fixUpTaskFilterByCategory(category);
+		return res;
+	}
+
+	public Collection<FixUpTask> fixUpTaskFilterByRangeOfPrices(final Double minPrice, final Double maxPrice) {
+		//Logged user must be a handyWorker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		Collection<FixUpTask> res;
+		res = this.fixUpTaskFilterByRangeOfPrices(minPrice, maxPrice);
+		return res;
+	}
+
+	public Collection<FixUpTask> fixUpTaskFilterByRangeOfDates(final Date minDate, final Date maxDate) {
+		//Logged user must be a handyWorker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		Collection<FixUpTask> res;
+		res = this.fixUpTaskFilterByRangeOfDates(minDate, maxDate);
+		return res;
+	}
+
+	public Collection<FixUpTask> fixUpTaskFilterByWarranty(final Integer warrantyId) {
+		//Logged user must be a handyWorker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		Collection<FixUpTask> res;
+		res = this.fixUpTaskFilterByWarranty(warrantyId);
+		return res;
+	}
+
 	//12.5
 	public ArrayList<Object> applicationsStatistics() {
 		//Logged user must be an administrator
@@ -178,6 +243,17 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		return this.fixUpTaskRepository.maximunPriceStatistics();
+	}
+	
+	//37.2
+	public Collection<FixUpTask> finderResults(final Integer finderId) {
+		//Logged user must be a HandyWorker
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		return this.fixUpTaskRepository.finderResults(finderId);
 	}
 
 	//38.5
