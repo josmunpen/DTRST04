@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ActorRepository;
+import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import security.UserAccountRepository;
 import domain.Actor;
-import domain.Administrator;
 
 @Service
 @Transactional
@@ -61,42 +61,71 @@ public class ActorService {
 		return res;
 	}
 
+	public Collection<Actor> findAll() {
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		return this.actorRepository.findAll();
+	}
+
 	//38.2
 	public Collection<Actor> suspiciousActors() {
-		final Administrator admin;
-		admin = this.administratorService.findByPrincipal();
-		Assert.notNull(admin);
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
 
 		return this.actorRepository.suspiciousActors();
 	}
 
 	//38.3
 	public Actor banActor(final Actor a) {
-		final Administrator admin;
-		admin = this.administratorService.findByPrincipal();
-		Assert.notNull(admin);
+		Assert.notNull(a);
+		Assert.isTrue(a.getId() != 0);
+		Actor res;
+		//Logged user must be an administrator
+		final Authority au = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		au.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(au));
+
+		Assert.isTrue(a.getBan() == false);
 
 		a.setBan(true);
-		this.actorRepository.save(a);
-		final UserAccount user = a.getUserAccount();
-		this.userAccountRepository.delete(user);
+		res = this.actorRepository.save(a);
 
-		return a;
+		//TODO: en lugar de quitar la cuenta de usuario, hacer comprobación de que el usuario no está baneado en todas las acciones
+		final UserAccount userToBan = a.getUserAccount();
+		this.userAccountRepository.delete(userToBan);
+
+		return res;
 	}
 
 	//38.4
-	public Actor UnbanActor(final Actor a) {
-		final Administrator admin;
-		admin = this.administratorService.findByPrincipal();
-		Assert.notNull(admin);
+	public Actor unbanActor(final Actor a) {
+		Assert.notNull(a);
+		Assert.isTrue(a.getId() != 0);
+		final Actor res;
+
+		//Logged user must be an administrator
+		final Authority au = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		au.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(au));
 
 		Assert.isTrue(a.getBan() == true);
 
 		a.setBan(false);
-		this.actorRepository.save(a);
-		final UserAccount user = a.getUserAccount();
-		this.userAccountRepository.save(user);
+		res = this.actorRepository.save(a);
 
-		return a;
+		//TODO:Revisar (anotación banActor)
+		final UserAccount userToUnban = a.getUserAccount();
+		this.userAccountRepository.save(userToUnban);
+
+		return res;
 	}
 }

@@ -96,7 +96,8 @@ public class FixUpTaskService {
 
 		//Business logic
 		Assert.isTrue(fixUpTask.getStartDate().before(fixUpTask.getEndDate()));
-
+		for (final Warranty w : fixUpTask.getWarranty())
+			Assert.isTrue(w.isFinalMode());
 		final FixUpTask res;
 		res = this.fixUpTaskRepository.save(fixUpTask);
 		return res;

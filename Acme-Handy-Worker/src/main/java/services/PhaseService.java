@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import repositories.PhaseRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.FixUpTask;
 import domain.HandyWorker;
 import domain.Phase;
 
@@ -43,7 +45,11 @@ public class PhaseService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		final Phase res = new Phase();
-		//TODO: Revisar create
+		res.setTitle("");
+		res.setDescription("");
+		res.setStartMoment(new Date());
+		res.setEndMoment(new Date());
+		res.setNumber(0);
 		return res;
 	}
 
@@ -79,17 +85,16 @@ public class PhaseService {
 		final HandyWorker logHandyWorker;
 		logHandyWorker = this.handyWorkerService.findByPrincipal();
 		Assert.notNull(logHandyWorker);
-		Assert.notNull(logHandyWorker.getId());
+		Assert.isTrue(logHandyWorker.getId() != 0);
 		final Collection<Phase> phases = logHandyWorker.getPlannedPhases();
 		Assert.isTrue(phases.contains(phase));
 
-		Assert.notNull(phase.getDescription());
-		Assert.notNull(phase.getNumber());
-		//TODO: Comprobar que el number es correcto
-		Assert.notNull(phase.getStartMoment());
-		Assert.notNull(phase.getEndMoment());
+		final FixUpTask fixUpTask = phase.getFixUpTask();
+		final Collection<Phase> plannedPhases = fixUpTask.getPhases();
+		final Integer currentNumber = plannedPhases.size();
+		phase.setNumber(currentNumber + 1);
 		Assert.isTrue(phase.getEndMoment().after(phase.getStartMoment()));
-		Assert.notNull(phase.getTitle());
+		//TODO: está mal current number?
 
 		res = this.phaseRepository.save(phase);
 		return res;
@@ -112,13 +117,7 @@ public class PhaseService {
 		final Collection<Phase> phases = logHandyWorker.getPlannedPhases();
 		Assert.isTrue(phases.contains(phase));
 
-		Assert.notNull(phase.getDescription());
-		Assert.notNull(phase.getNumber());
-		//TODO: Comprobar que el number es correcto
-		Assert.notNull(phase.getStartMoment());
-		Assert.notNull(phase.getEndMoment());
 		Assert.isTrue(phase.getEndMoment().after(phase.getStartMoment()));
-		Assert.notNull(phase.getTitle());
 
 		this.phaseRepository.delete(phase);
 	}

@@ -119,7 +119,7 @@ public class FixUpTask extends DomainEntity {
 	public void setWarranty(final Collection<Warranty> warranty) {
 		this.warranty = warranty;
 	}
-	@OneToMany
+	@OneToMany(mappedBy = "fixUpTask")
 	public Collection<Phase> getPhases() {
 		return this.phases;
 	}

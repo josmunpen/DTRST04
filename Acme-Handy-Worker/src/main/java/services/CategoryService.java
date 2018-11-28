@@ -24,13 +24,11 @@ public class CategoryService {
 		a.setAuthority(Authority.ADMIN);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
-		Category result;
-		//TODO: Comprobar create
-		result = new Category();
+		final Category result = new Category();
+		result.setParentCategory(new Category());
 
 		return result;
 	}
-
 	public Category save(final Category category) {
 		//Logged user must be an administrator
 		final Authority a = new Authority();
@@ -39,8 +37,7 @@ public class CategoryService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		Assert.notNull(category);
-		Assert.notNull(category.getId());
-		Assert.notNull(category.getName());
+		Assert.isTrue(category.getId() != 0);
 
 		Category res;
 		res = this.categoryRepository.save(category);
@@ -55,8 +52,7 @@ public class CategoryService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		Assert.notNull(category);
-		Assert.notNull(category.getId());
-		Assert.notNull(category.getName());
+		Assert.isTrue(category.getId() != 0);
 
 		this.categoryRepository.delete(category);
 

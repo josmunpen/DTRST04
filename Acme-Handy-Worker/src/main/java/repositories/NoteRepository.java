@@ -1,3 +1,4 @@
+
 package repositories;
 
 import java.util.Collection;
@@ -15,7 +16,5 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 	//35.2
 	@Query("select  from Customer c join c.fixUpTasks f where c.id=?1")
 	Collection<Application> findByCustomerId(int customerId);
-	
-	
 
 }
