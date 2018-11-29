@@ -1,5 +1,5 @@
 #./src/main/resources/Entities.map
-#Wed Nov 28 21:24:35 CET 2018
+#Thu Nov 29 11:49:14 CET 2018
 message4=2479
 message3=2478
 message2=2477
@@ -29,6 +29,11 @@ FixUpTask4=2497
 FixUpTask3=2496
 FixUpTask2=2495
 FixUpTask1=2494
+warranty5=2415
+warranty4=2414
+warranty3=2413
+warranty2=2412
+warranty1=2411
 socialProfile5=2486
 socialProfile4=2485
 socialProfile3=2484
@@ -119,11 +124,6 @@ referee2=2428
 endorsement20=2465
 referee1=2427
 customisation1=2493
-warraty5=2415
-warraty4=2414
-warraty3=2413
-warraty2=2412
-warraty1=2411
 userAccount7=2365
 userAccount5=2364
 userAccount4=2363

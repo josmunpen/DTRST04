@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class FinderService {
 	public HandyWorkerService	handyWorkerService;
 
 	@Autowired
-	public FixUpTaskService	fixUpTaskService;
+	public FixUpTaskService		fixUpTaskService;
 
 
 	public Finder finderById(final Integer id) {
@@ -43,11 +44,6 @@ public class FinderService {
 		f = this.finderRepository.finderById(id);
 		return f;
 	}
-
-
-	
-	
-
 
 	//Constructor
 	public FinderService() {
@@ -106,12 +102,12 @@ public class FinderService {
 		Assert.isTrue(logHandyWorker.getFinders().contains(finder));
 
 		final Finder f;
-		final Collection<FixUpTask> results;
+		final Collection<FixUpTask> results = new ArrayList<FixUpTask>();
 		if (finder.getKeyWord() != null || finder.getKeyWord() != "")
 			results.addAll(this.fixUpTaskService.fixUpTaskFilterByKeyword(finder.getKeyWord()));
 		if (finder.getCategory() != null || finder.getCategory() != "")
 			results.addAll(this.fixUpTaskService.fixUpTaskFilterByCategory(finder.getCategory()));
-		if (finder.getWarranty().getId() != null || finder.getWarranty() != 0)
+		if (finder.getWarranty().getId() != 0 || finder.getWarranty().getId() != 0)
 			results.addAll(this.fixUpTaskService.fixUpTaskFilterByWarranty(finder.getWarranty().getId()));
 		if (finder.getStartDate() != null && finder.getEndDate() != null)
 			results.addAll(this.fixUpTaskService.fixUpTaskFilterByRangeOfDates(finder.getStartDate(), finder.getEndDate()));
@@ -121,5 +117,4 @@ public class FinderService {
 		f = this.save(finder);
 		return f;
 	}
-
 }
