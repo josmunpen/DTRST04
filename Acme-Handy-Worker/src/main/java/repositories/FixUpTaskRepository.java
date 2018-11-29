@@ -15,7 +15,7 @@ import domain.FixUpTask;
 public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 
 	//Query 10.1 (METIENDO ID DE CUSTOMER)
-	@Query("select distinct c.fixUpTasks from Customer c where c.id=?1")
+	@Query("select c.fixUpTasks from Customer c where c.id=?1")
 	Collection<FixUpTask> findByCustomerId(int customerId);
 
 	/*
@@ -38,7 +38,7 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 	@Query("select f from FixUpTask f where f.startDate between ?1 and ?2")
 	Collection<FixUpTask> fixUpTaskFilterByRangeOfDates(Date minDate, Date maxDate);
 
-	@Query("select f from FixUpTask f where f.warranty.id = ?1")
+	@Query("select distinct f from FixUpTask f join f.warranty w where w.id = ?1")
 	Collection<FixUpTask> fixUpTaskFilterByWarranty(Integer warrantyId);
 	//12.5
 	@Query("select avg(f.applications.size), min(f.applications.size), max(f.applications.size), stddev(f.applications.size) from FixUpTask f")
@@ -56,6 +56,5 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 
 	@Query("select count(f)/(select count(f1) from FixUpTask f1) from FixUpTask f where f.complaints.size>0")
 	double fixUpTasksWithComplaints();
-	
 
 }

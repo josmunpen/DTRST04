@@ -17,7 +17,6 @@ import security.UserAccount;
 import domain.Administrator;
 import domain.Application;
 import domain.Category;
-import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.Money;
@@ -43,7 +42,7 @@ public class FixUpTaskService {
 	public AdministratorService	administratorService;
 
 	@Autowired
-	public FinderService finderService;
+	public FinderService		finderService;
 
 
 	//Constructor
@@ -172,7 +171,7 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		Collection<FixUpTask> res;
-		res = this.fixUpTaskFilterByKeyword(keyword);
+		res = this.fixUpTaskRepository.fixUpTaskFilterByKeyword(keyword);
 		return res;
 
 	}
@@ -185,7 +184,7 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		Collection<FixUpTask> res;
-		res = this.fixUpTaskFilterByCategory(category);
+		res = this.fixUpTaskRepository.fixUpTaskFilterByCategory(category);
 		return res;
 	}
 
@@ -197,7 +196,7 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		Collection<FixUpTask> res;
-		res = this.fixUpTaskFilterByRangeOfPrices(minPrice, maxPrice);
+		res = this.fixUpTaskRepository.fixUpTaskFilterByRangeOfPrices(minPrice, maxPrice);
 		return res;
 	}
 
@@ -209,7 +208,7 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		Collection<FixUpTask> res;
-		res = this.fixUpTaskFilterByRangeOfDates(minDate, maxDate);
+		res = this.fixUpTaskRepository.fixUpTaskFilterByRangeOfDates(minDate, maxDate);
 		return res;
 	}
 
@@ -221,7 +220,7 @@ public class FixUpTaskService {
 		Assert.isTrue(user.getAuthorities().contains(a));
 
 		Collection<FixUpTask> res;
-		res = this.fixUpTaskFilterByWarranty(warrantyId);
+		res = this.fixUpTaskRepository.fixUpTaskFilterByWarranty(warrantyId);
 		return res;
 	}
 
@@ -245,7 +244,7 @@ public class FixUpTaskService {
 
 		return this.fixUpTaskRepository.maximunPriceStatistics();
 	}
-	
+
 	//37.2
 	public Collection<FixUpTask> finderResults(final Integer finderId) {
 		//Logged user must be a HandyWorker
