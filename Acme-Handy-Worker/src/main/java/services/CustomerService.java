@@ -91,7 +91,7 @@ public class CustomerService {
 		result.setPhoneNumber("");
 		result.setPhotoURL("");
 
-		//HandyWorker
+		//Customer
 		result.setScore(0);
 		result.setFixUpTasks(new ArrayList<FixUpTask>());
 		result.setUserAccount(user);

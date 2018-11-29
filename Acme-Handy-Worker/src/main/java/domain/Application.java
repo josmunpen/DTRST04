@@ -82,7 +82,6 @@ public class Application extends DomainEntity {
 	private FixUpTask	fixUpTask;
 
 
-	@Valid
 	@ManyToOne(optional = false)
 	public FixUpTask getFixUpTask() {
 		return this.fixUpTask;

@@ -1,7 +1,10 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +15,11 @@ import repositories.EndorsementRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Application;
 import domain.Customer;
 import domain.Endorsement;
+import domain.Endorser;
+import domain.FixUpTask;
 import domain.HandyWorker;
 
 @Service
@@ -31,6 +37,12 @@ public class EndorsementService {
 	@Autowired
 	public HandyWorkerService		handyWorkerService;
 
+	@Autowired
+	public FixUpTaskService			fixUpTaskService;
+
+	@Autowired
+	public ApplicationService		applicationService;
+
 
 	//Constructor
 	public EndorsementService() {
@@ -40,14 +52,19 @@ public class EndorsementService {
 	//Simple CRUD methods
 	//48.1
 	public Endorsement create() {
-		//Logged user must be a customer
+		//Logged user must be a customer or a handy worker
 		final Authority a = new Authority();
+		final Authority b = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
 		a.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(user.getAuthorities().contains(a));
+		b.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b));
 
 		final Endorsement res = new Endorsement();
-		//TODO: Sender y recipient? El recipient tiene que haber trabajado para el customer
+		res.setComment("");
+		res.setMoment(new Date());
+		res.setSender(new Endorser());
+		res.setRecipient(new Endorser());
 
 		return res;
 	}
@@ -70,24 +87,39 @@ public class EndorsementService {
 	}
 
 	public Endorsement saveByCustomer(final Endorsement endorsement) {
+		Assert.notNull(endorsement);
+		Assert.isTrue(endorsement.getId() != 0);
 		//Logged user must be a customer
-		final Authority a = new Authority();
+		final Authority au = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
-		a.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(user.getAuthorities().contains(a));
+		au.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(user.getAuthorities().contains(au));
 
 		//Logged user must be endorsement's sender
 		final Customer sender;
 		sender = this.customerService.findByPrincipal();
 		Assert.notNull(sender);
-		Assert.notNull(sender.getId());
+		Assert.isTrue(sender.getId() != 0);
 		Assert.isTrue(sender.equals(endorsement.getSender()));
 
-		//Restrictions
-		Assert.notNull(endorsement.getMoment());
-		Assert.notNull(endorsement.getComment());
-		Assert.notNull(endorsement.getSender());
-		Assert.notNull(endorsement.getRecipient());
+		//Recipient must be a handy worker who has been involved
+		//in any of his or her fix-up tasks
+		//TODO: Comprobar que el recipient es un handy worker
+		final Endorser recipient;
+		recipient = endorsement.getRecipient();
+		final Collection<FixUpTask> fixUpTasks = this.fixUpTaskService.findByCustomer();
+		final List<Application> applicationsCustomer = new ArrayList<Application>();
+		for (final FixUpTask f : fixUpTasks)
+			applicationsCustomer.addAll(f.getApplications());
+
+		boolean checkApp = false;
+		final Collection<Application> applicationsHandyWorker = this.applicationService.findByHandyWorker();
+		for (final Application a : applicationsHandyWorker)
+			if (applicationsCustomer.contains(a)) {
+				checkApp = true;
+				break;
+			}
+		Assert.isTrue(checkApp);
 
 		final Endorsement res;
 		res = this.endorsementRepository.save(endorsement);
@@ -96,28 +128,40 @@ public class EndorsementService {
 
 	public void deleteByCustomer(final Endorsement endorsement) {
 		Assert.notNull(endorsement);
-		Assert.notNull(endorsement.getId());
 		Assert.isTrue(endorsement.getId() != 0);
 		Assert.isTrue(this.endorsementRepository.exists(endorsement.getId()));
 
 		//Logged user must be a customer
-		final Authority a = new Authority();
+		final Authority au = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
-		a.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(user.getAuthorities().contains(a));
+		au.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(user.getAuthorities().contains(au));
 
 		//Logged user must be endorsement's sender
 		final Customer sender;
 		sender = this.customerService.findByPrincipal();
 		Assert.notNull(sender);
-		Assert.notNull(sender.getId());
+		Assert.isTrue(sender.getId() != 0);
 		Assert.isTrue(sender.equals(endorsement.getSender()));
 
-		//Restrictions
-		Assert.notNull(endorsement.getMoment());
-		Assert.notNull(endorsement.getComment());
-		Assert.notNull(endorsement.getSender());
-		Assert.notNull(endorsement.getRecipient());
+		//Recipient must be a handy worker who has been involved
+		//in any of his or her fix-up tasks
+		//TODO: Comprobar que el recipient es un handy worker
+		final Endorser recipient;
+		recipient = endorsement.getRecipient();
+		final Collection<FixUpTask> fixUpTasks = this.fixUpTaskService.findByCustomer();
+		final List<Application> applicationsCustomer = new ArrayList<Application>();
+		for (final FixUpTask f : fixUpTasks)
+			applicationsCustomer.addAll(f.getApplications());
+
+		boolean checkApp = false;
+		final Collection<Application> applicationsHandyWorker = this.applicationService.findByHandyWorker();
+		for (final Application a : applicationsHandyWorker)
+			if (applicationsCustomer.contains(a)) {
+				checkApp = true;
+				break;
+			}
+		Assert.isTrue(checkApp);
 
 		this.endorsementRepository.delete(endorsement);
 
@@ -144,10 +188,10 @@ public class EndorsementService {
 
 	public Endorsement saveByHandyWorker(final Endorsement endorsement) {
 		//Logged user must be a handy worker
-		final Authority a = new Authority();
+		final Authority au = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
-		a.setAuthority(Authority.HANDYWORKER);
-		Assert.isTrue(user.getAuthorities().contains(a));
+		au.setAuthority(Authority.HANDYWORKER);
+		Assert.isTrue(user.getAuthorities().contains(au));
 
 		//Logged user must be endorsement's sender
 		final HandyWorker sender;
@@ -156,11 +200,23 @@ public class EndorsementService {
 		Assert.notNull(sender.getId());
 		Assert.isTrue(sender.equals(endorsement.getSender()));
 
-		//Restrictions
-		Assert.notNull(endorsement.getMoment());
-		Assert.notNull(endorsement.getComment());
-		Assert.notNull(endorsement.getSender());
-		Assert.notNull(endorsement.getRecipient());
+		//Endorsement must be about a customer for whom he or she's worked
+		//TODO: Comprobar que el recipient es un customer
+		final Endorser recipient;
+		recipient = endorsement.getRecipient();
+		final Collection<Application> applicationsHandy = this.applicationService.findByHandyWorker();
+		final List<FixUpTask> fixUpTaskHandy = new ArrayList<FixUpTask>();
+		for (final Application a : applicationsHandy)
+			fixUpTaskHandy.add(a.getFixUpTask());
+
+		boolean checkApp = false;
+		final Collection<FixUpTask> fixUpTaskCustomer = this.fixUpTaskService.findByCustomer();
+		for (final FixUpTask f : fixUpTaskCustomer)
+			if (fixUpTaskHandy.contains(f)) {
+				checkApp = true;
+				break;
+			}
+		Assert.isTrue(checkApp);
 
 		final Endorsement res;
 		res = this.endorsementRepository.save(endorsement);
@@ -174,10 +230,10 @@ public class EndorsementService {
 		Assert.isTrue(this.endorsementRepository.exists(endorsement.getId()));
 
 		//Logged user must be a customer
-		final Authority a = new Authority();
+		final Authority au = new Authority();
 		final UserAccount user = LoginService.getPrincipal();
-		a.setAuthority(Authority.CUSTOMER);
-		Assert.isTrue(user.getAuthorities().contains(a));
+		au.setAuthority(Authority.CUSTOMER);
+		Assert.isTrue(user.getAuthorities().contains(au));
 
 		//Logged user must be endorsement's sender
 		final Customer sender;
@@ -186,11 +242,23 @@ public class EndorsementService {
 		Assert.notNull(sender.getId());
 		Assert.isTrue(sender.equals(endorsement.getSender()));
 
-		//Restrictions
-		Assert.notNull(endorsement.getMoment());
-		Assert.notNull(endorsement.getComment());
-		Assert.notNull(endorsement.getSender());
-		Assert.notNull(endorsement.getRecipient());
+		//Endorsement must be about a customer for whom he or she's worked
+		//TODO: Comprobar que el recipient es un customer
+		final Endorser recipient;
+		recipient = endorsement.getRecipient();
+		final Collection<Application> applicationsHandy = this.applicationService.findByHandyWorker();
+		final List<FixUpTask> fixUpTaskHandy = new ArrayList<FixUpTask>();
+		for (final Application a : applicationsHandy)
+			fixUpTaskHandy.add(a.getFixUpTask());
+
+		boolean checkApp = false;
+		final Collection<FixUpTask> fixUpTaskCustomer = this.fixUpTaskService.findByCustomer();
+		for (final FixUpTask f : fixUpTaskCustomer)
+			if (fixUpTaskHandy.contains(f)) {
+				checkApp = true;
+				break;
+			}
+		Assert.isTrue(checkApp);
 
 		this.endorsementRepository.delete(endorsement);
 

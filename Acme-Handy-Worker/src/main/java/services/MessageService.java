@@ -158,6 +158,13 @@ public class MessageService {
 		d.setAuthority(Authority.SPONSOR);
 		e.setAuthority(Authority.ADMIN);
 
+		//Logged actor is sender or recipient
+		final Actor logActor;
+		logActor = this.actorService.findByPrincipal();
+		Assert.notNull(logActor);
+		Assert.notNull(logActor.getId());
+		Assert.isTrue(logActor.equals(message.getSender()) || logActor.equals(message.getRecipient()));
+
 		Assert.isTrue(user.getAuthorities().contains(a) || user.getAuthorities().contains(b) || user.getAuthorities().contains(c) || user.getAuthorities().contains(d) || user.getAuthorities().contains(e));
 
 		//Restrictions
@@ -181,5 +188,35 @@ public class MessageService {
 		return m;
 
 	}
+	public Message sendAll(final Message message) {
+		Assert.notNull(message);
+		Assert.isTrue(message.getId() != 0);
+		final Message res;
 
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		for (final Actor act : this.actorService.findAll())
+			//Message saves in recipient's corresponding box
+			for (final Box box : act.getBoxes())
+				if (box.getName() == "in" && !message.getFlagSpam()) {
+
+					final Collection<Message> col = box.getMessages();
+					col.add(message);
+					box.setMessages(col);
+
+				} else if (box.getName() == "spam" && message.getFlagSpam()) {
+					final Collection<Message> col = box.getMessages();
+					col.add(message);
+					box.setMessages(col);
+
+				}
+
+		res = this.messageRepository.save(message);
+
+		return res;
+	}
 }

@@ -10,10 +10,10 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -26,7 +26,6 @@ public class Finder extends DomainEntity {
 	private Money	maxPrice;
 	private Date	startDate;
 	private Date	endDate;
-	private double	warranty;
 
 
 	public String getKeyWord() {
@@ -76,17 +75,11 @@ public class Finder extends DomainEntity {
 	public void setEndDate(final Date endDate) {
 		this.endDate = endDate;
 	}
-	@Digits(integer = 6, fraction = 2)
-	public double getWarranty() {
-		return this.warranty;
-	}
-	public void setWarranty(final double warranty) {
-		this.warranty = warranty;
-	}
 
 
 	//Relationships
-	Collection<FixUpTask>	fixUpTasks;
+	private Collection<FixUpTask>	fixUpTasks;
+	private Warranty				warranty;
 
 
 	@OneToMany
@@ -95,6 +88,13 @@ public class Finder extends DomainEntity {
 	}
 	public void setFixUpTasks(final Collection<FixUpTask> fixUpTasks) {
 		this.fixUpTasks = fixUpTasks;
+	}
+	@ManyToOne(optional = true)
+	public Warranty getWarranty() {
+		return this.warranty;
+	}
+	public void setWarranty(final Warranty warranty) {
+		this.warranty = warranty;
 	}
 
 }

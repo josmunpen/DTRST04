@@ -24,6 +24,28 @@ public class WarrantyService {
 
 
 	//12.2
+
+	//Constructor
+	public WarrantyService() {
+		super();
+	}
+
+	//Simple CRUD methods
+	public Warranty create() {
+		//Logged user must be an administrator
+		final Authority a = new Authority();
+		final UserAccount user = LoginService.getPrincipal();
+		a.setAuthority(Authority.ADMIN);
+		Assert.isTrue(user.getAuthorities().contains(a));
+
+		final Warranty res = new Warranty();
+		res.setApplicableLaws("");
+		res.setFinalMode(false);
+		res.setTerms("");
+		res.setTitle("");
+		return res;
+	}
+
 	public void delete(final Warranty warranty) {
 
 		//Logged user must be an administrator
@@ -32,12 +54,7 @@ public class WarrantyService {
 		a.setAuthority(Authority.ADMIN);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
-		Assert.notNull(warranty);
-		Assert.notNull(warranty.getId());
 		Assert.isTrue(warranty.isFinalMode() == false);
-		Assert.notNull(warranty.getApplicableLaws());
-		Assert.notNull(warranty.getTitle());
-		Assert.notNull(warranty.getTerms());
 
 		this.warrantyRepository.delete(warranty);
 
@@ -51,12 +68,7 @@ public class WarrantyService {
 		a.setAuthority(Authority.ADMIN);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
-		Assert.notNull(warranty);
-		Assert.notNull(warranty.getId());
 		Assert.isTrue(warranty.isFinalMode() == false);
-		Assert.notNull(warranty.getApplicableLaws());
-		Assert.notNull(warranty.getTitle());
-		Assert.notNull(warranty.getTerms());
 
 		final Warranty res = this.warrantyRepository.save(warranty);
 

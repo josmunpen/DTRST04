@@ -65,7 +65,6 @@ public class ApplicationService {
 		res.setCreditCard(new CreditCard());
 
 		return new Application();
-		//TODO: 11.3 When a handy worker applies for a fix-up task...
 	}
 	//Complex methods
 	//10.2

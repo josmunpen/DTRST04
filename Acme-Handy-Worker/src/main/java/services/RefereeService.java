@@ -15,6 +15,8 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Box;
 import domain.Referee;
+import domain.Report;
+import domain.SocialProfile;
 
 @Service
 @Transactional
@@ -44,18 +46,44 @@ public class RefereeService {
 
 		final Referee res;
 		res = new Referee();
+		//Actor
 		final Box trash = new Box();
 		final Box out = new Box();
 		final Box spam = new Box();
 		final Box in = new Box();
+		trash.setName("trash");
+		in.setName("in");
+		out.setName("out");
+		spam.setName("spam");
+		out.setPredefined(true);
+		in.setPredefined(true);
+		spam.setPredefined(true);
+		trash.setPredefined(true);
 		final List<Box> predefined = new ArrayList<Box>();
 		predefined.add(in);
 		predefined.add(out);
 		predefined.add(spam);
 		predefined.add(trash);
+
+		final UserAccount newUser = new UserAccount();
+		final Authority f = new Authority();
+		f.setAuthority(Authority.REFEREE);
+		newUser.addAuthority(f);
+
 		res.setBoxes(new ArrayList<Box>(predefined));
+		res.setSocialProfiles(new ArrayList<SocialProfile>());
+		res.setName("");
+		res.setEmail("");
+		res.setAddress("");
+		res.setSurname("");
+		res.setPhoneNumber("");
+		res.setPhotoURL("");
+
+		//Referee
+		res.setReports(new ArrayList<Report>());
 
 		return res;
+
 	}
 
 	//Returns logged customer
