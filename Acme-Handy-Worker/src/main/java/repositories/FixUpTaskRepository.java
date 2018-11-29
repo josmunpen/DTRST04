@@ -14,7 +14,7 @@ import domain.FixUpTask;
 public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 
 	//Query 10.1 (METIENDO ID DE CUSTOMER)
-	@Query("select distinct c.fixuptasks from Customer c where c.id=?1")
+	@Query("select distinct c.fixUpTasks from Customer c where c.id=?1")
 	Collection<FixUpTask> findByCustomerId(int customerId);
 
 	/*
@@ -43,4 +43,6 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 
 	@Query("select count(f)/(select count(f1) from FixUpTask f1) from FixUpTask f where f.complaints.size>0")
 	double fixUpTasksWithComplaints();
+	
+
 }

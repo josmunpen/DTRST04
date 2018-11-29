@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.type.CalendarDateType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +56,6 @@ public class NoteService {
 			a.setAuthority(Authority.CUSTOMER);
 			Assert.isTrue(user.getAuthorities().contains(a));
 			
-			//TODO: Revisar create (Hace falta meter el ticker?)
 			final Note res = new Note();
 			res.setCustomer(new Customer());
 			res.setHandyWorker(new HandyWorker());
@@ -69,3 +69,36 @@ public class NoteService {
 			res.setCustomerComment("");
 			return res;
 		}
+		
+		public Note saveNoteCustomer(Note note) {
+
+			//Logged user must be a customer
+			final Authority a = new Authority();
+			final UserAccount user = LoginService.getPrincipal();
+			a.setAuthority(Authority.CUSTOMER);
+			Assert.isTrue(user.getAuthorities().contains(a));
+			
+			/*
+			final Note res = new Note();
+			res.setCustomer(note.getCustomer());
+			res.setHandyWorker(note.getHandyWorker());
+			res.setReferee(note.getReferee());
+			res.setCustomerComment(note.getCustomerComment());
+			res.setHandyWorkerComment(note.getHandyWorkerComment());
+			res.setRefereeComment(note.getRefereeComment());
+			res.setMandatoryComment(note.getMandatoryComment());
+			res.setMoment(Calendar.getInstance().getTime());
+			res.setCustomerComment(note.getCustomerComment());
+			this.noteRepository.save(res);
+			return res;
+			*/
+			final Note res=new Note();
+			res.setCustomer(note.getCustomer());
+			res.setCustomerComment(note.getCustomerComment());
+			res.setMandatoryComment(note.getMandatoryComment());
+			res.setMoment(Calendar.getInstance().getTime());
+			res.setCustomerComment(note.getCustomerComment());
+			this.noteRepository.save(res);
+			return res;
+		}
+}

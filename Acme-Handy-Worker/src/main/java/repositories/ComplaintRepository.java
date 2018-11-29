@@ -12,9 +12,9 @@ import domain.Complaint;
 @Repository
 public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
 
-	//TODO:35.1
-	//@Query("select ")
-	//Collection<Complaint> findByCustomerId(int customerId);
+	//35.1
+	@Query("select f.complaints join c.fixUpTasks f from Customer c where c.id=?1")
+	Collection<Complaint> complaintsByCustomer(int customerId);
 
 	//TODO:36.1 Query que seleccione las complaints sin referee asignado
 	@Query("select c from Complaint c where c")

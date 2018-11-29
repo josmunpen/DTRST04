@@ -17,6 +17,7 @@ import security.UserAccount;
 import domain.Administrator;
 import domain.Application;
 import domain.Category;
+import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.Money;

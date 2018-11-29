@@ -3,6 +3,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import repositories.ComplaintRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import utilities.TickerGenerator;
 import domain.Complaint;
 import domain.FixUpTask;
 import domain.Referee;
@@ -36,7 +38,10 @@ public class ComplaintService {
 	@Autowired
 	public RefereeService		refereeService;
 
-
+	//Generador de tickers
+	@Autowired
+	public TickerGenerator      tickerGenerator;
+	
 	//Constructor
 	public ComplaintService() {
 		super();
@@ -54,6 +59,10 @@ public class ComplaintService {
 
 		//TODO: Revisar create
 		final Complaint res = new Complaint();
+		res.setAttachments(new ArrayList<String>());
+		res.setDescription("");
+		res.setMoment(new Date());
+		res.setTicker("");
 
 		return res;
 	}
@@ -67,17 +76,8 @@ public class ComplaintService {
 		a.setAuthority(Authority.CUSTOMER);
 		Assert.isTrue(user.getAuthorities().contains(a));
 
-		final List<FixUpTask> fixUp = new ArrayList<>();
-
-		fixUp.addAll(this.fixUpTaskService.findByCustomer());
-
-		FixUpTask f;
-		final List<Complaint> res = new ArrayList<Complaint>();
-
-		for (int i = 0; i < fixUp.size(); i++) {
-			f = fixUp.get(0);
-			res.addAll(f.getComplaints());
-		}
+		final List<Complaint> res = new ArrayList<>(this.complaintRepository
+				.complaintsByCustomer(user.getId()));
 
 		return res;
 
@@ -94,11 +94,12 @@ public class ComplaintService {
 		referee = this.refereeService.findByPrincipal();
 		Assert.notNull(referee);
 
-		final List<Complaint> res = new ArrayList<Complaint>();
+		final List<Complaint> res = new ArrayList<Complaint>(this.complaintRepository.findWithoutReferee());
 
 		return res;
 
 	}
+	
 
 	//36.2
 	public Collection<Complaint> findByReferee() {
