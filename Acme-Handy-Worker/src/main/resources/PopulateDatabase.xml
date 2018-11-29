@@ -1688,11 +1688,7 @@
 		<property name="moment" value="15/08/2010"/>
 		<property name="description" value="Problems"/>
 		<property name="attachments" value="http://attach1.com"/>
-		<property name="fixUpTasks">
-		<list>
-		<ref bean="FixUpTask3"/>
-		</list>
-		</property>
+		<property name="fixUpTask" ref="FixUpTask3"/>
 	</bean>
 	
 	<bean id="complaint2" class="domain.Complaint">
@@ -1700,11 +1696,7 @@
 		<property name="moment" value="16/08/2010"/>
 		<property name="description" value="Problems"/>
 		<property name="attachments" value="http://attach2.com"/>
-		<property name="fixUpTasks">
-		<list>
-		<ref bean="FixUpTask4"/>
-		</list>
-		</property>
+		<property name="fixUpTask" ref="FixUpTask4"/>
 	</bean>
 	
 	<bean id="complaint3" class="domain.Complaint">
@@ -1712,11 +1704,7 @@
 		<property name="moment" value="17/08/2010"/>
 		<property name="description" value="Problems"/>
 		<property name="attachments" value="http://attach3.com"/>
-		<property name="fixUpTasks">
-		<list>
-		<ref bean="FixUpTask5"/>
-		</list>
-		</property>
+		<property name="fixUpTask" ref="FixUpTask5"/>
 	</bean>
 	
 	<bean id="complaint4" class="domain.Complaint">
@@ -1724,11 +1712,7 @@
 		<property name="moment" value="18/08/2010"/>
 		<property name="description" value="Problems"/>
 		<property name="attachments" value="http://attach4.com"/>
-		<property name="fixUpTasks">
-		<list>
-		<ref bean="FixUpTask6"/>
-		</list>
-		</property>
+		<property name="fixUpTask" ref="FixUpTask6"/>
 	</bean>
 	
 	<bean id="complaint5" class="domain.Complaint">
@@ -1736,11 +1720,7 @@
 		<property name="moment" value="20/08/2010"/>
 		<property name="description" value="Problems"/>
 		<property name="attachments" value="http://attach5.com"/>
-		<property name="fixUpTasks">
-		<list>
-		<ref bean="FixUpTask7"/>
-		</list>
-		</property>
+		<property name="fixUpTask" ref="FixUpTask7"/>
 	</bean>
 	
 	<bean id="complaint6" class="domain.Complaint">
@@ -1748,11 +1728,7 @@
 		<property name="moment" value="22/08/2010"/>
 		<property name="description" value="Problems"/>
 		<property name="attachments" value="http://attach6.com"/>
-		<property name="fixUpTasks">
-		<list>
-		<ref bean="FixUpTask2"/>
-		</list>
-		</property>
+			<property name="fixUpTask" ref="FixUpTask2"/>
 	</bean>
 	
 	<bean id="complaint7" class="domain.Complaint">
@@ -1760,11 +1736,7 @@
 		<property name="moment" value="10/08/2010"/>
 		<property name="description" value="Problems"/>
 		<property name="attachments" value="http://attach7.com"/>
-		<property name="fixUpTasks">
-		<list>
-		<ref bean="FixUpTask1"/>
-		</list>
-		</property>
+		<property name="fixUpTask" ref="FixUpTask1"/>
 	</bean>
 	
 <!-- Category -->
