@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.hibernate.type.CalendarDateType;
@@ -64,27 +65,6 @@ public class NoteService {
 		res.setCustomerComment("");
 		return res;
 	}
-
-<<<<<<< HEAD
-			//Logged user must be a customer
-			final Authority a = new Authority();
-			final UserAccount user = LoginService.getPrincipal();
-			a.setAuthority(Authority.CUSTOMER);
-			Assert.isTrue(user.getAuthorities().contains(a));
-			
-			final Note res = new Note();
-			res.setCustomer(new Customer());
-			res.setHandyWorker(new HandyWorker());
-			res.setReferee(new Referee());
-			res.setCustomerComment("");
-			res.setHandyWorkerComment("");
-			res.setRefereeComment("");
-			res.setMandatoryComment("");
-			res.setMoment(new Date());
-			//res.setMoment(Calendar.getInstance().getTime());
-			res.setCustomerComment("");
-			return res;
-		}
 		
 		public Note saveNoteCustomer(Note note) {
 
@@ -117,6 +97,5 @@ public class NoteService {
 			this.noteRepository.save(res);
 			return res;
 		}
-=======
->>>>>>> 6d6e8ce47246139b751956e85cfedd59e3d7f2e6
-}
+
+		}
